@@ -6,6 +6,7 @@ class Borrowers extends Controller
   private Borrowing $borrowingModel;
   private Reservation $reservationModel;
   private Book $bookModel;
+  private Sanction $sanctionModel;
 
   public function __construct()
   {
@@ -13,12 +14,20 @@ class Borrowers extends Controller
     $this->borrowingModel = $this->model('Borrowing');
     $this->reservationModel = $this->model('Reservation');
     $this->bookModel = $this->model('Book');
+    $this->sanctionModel = $this->model('Sanction');
   }
 
   public function index()
   {
     if (!isBorrowerLoggedIn()) {
       redirect('');
+    }
+    $sanctions = $this->sanctionModel->findSanctionsByUserCode($_SESSION['borrower_barcode']);
+    if ($sanctions) {
+      $data = [
+        'sanction' => $sanctions[0],
+      ];
+      $this->view('borrowers/index', $data);
     }
     $reservation = $this->reservationModel->findReservationByUserCode($_SESSION['borrower_barcode']);
 
@@ -51,7 +60,7 @@ class Borrowers extends Controller
       if ($loggedInUser) {
         // Create session
         createUserSession($loggedInUser);
-        
+
         redirect('borrowers');
       } else {
         $data['barcode_err'] = 'Account not found!';
