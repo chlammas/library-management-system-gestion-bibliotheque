@@ -22,6 +22,16 @@
   .rounded-pill {
     float: right;
   }
+
+  .btn-outline-danger:hover {
+    color: #fff;
+    background-color: #dc3545;
+  }
+
+  .btn-outline-danger {
+    color: #dc3545;
+    border-color: #dc3545;
+  }
 </style>
 <section class="section-content py-3">
   <div class="row">
@@ -45,12 +55,12 @@
           </li>
           <li class="nav-item">
             <a href="<?= URLROOT ?>/reservations" class="nav-link nav-link-custom link-dark">
-              Reservations <span class="badge bg-secondary rounded-pill"><?=Statistics::reservationsCount() ?></span>
+              Reservations <span class="badge bg-secondary rounded-pill"><?= Statistics::reservationsCount() ?></span>
             </a>
           </li>
           <li class="nav-item">
             <a href="<?= URLROOT ?>/borrowings" class="nav-link nav-link-custom link-dark">
-              Borrowings <span class="badge bg-secondary rounded-pill"><?=Statistics::NotReturnedBorrowingsCount() ?></span>
+              Borrowings <span class="badge bg-secondary rounded-pill"><?= Statistics::NotReturnedBorrowingsCount() ?></span>
             </a>
           </li>
           <li class="nav-item">

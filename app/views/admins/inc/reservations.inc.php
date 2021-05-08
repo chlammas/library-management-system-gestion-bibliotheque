@@ -10,17 +10,6 @@
       border-color: #198754;
     }
 
-    .btn-outline-danger {
-      color: #dc3545;
-      border-color: #dc3545;
-    }
-
-    .btn-outline-danger:hover {
-      color: #fff;
-      background-color: #646465;
-      border-color: #dc3545;
-    }
-
     .card-reservation {
       margin-top: 25px;
     }
