@@ -79,7 +79,9 @@ class borrowings extends Controller
           flash('reservation', $expectedError, 'alert alert-danger');
           $data['inv_err'] = $expectedError;
         } else {
-          flash('reservation', $e->getMessage(), 'alert alert-danger');
+          $expectedError = strpos($e->getMessage(), 'inv') !== false ? 'Book Inventory is invalid!' : 'Something wrong!';
+          
+          flash('reservation', $expectedError, 'alert alert-danger');
         }
           $this->view('admins/index', $data);
       }
