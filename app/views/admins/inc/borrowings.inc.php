@@ -103,6 +103,6 @@
       </div>
     </div>
   <?php else : ?>
-    <p>No reservations found</p>
+    <p>No borrowings found</p>
   <?php endif ?>
 </div>

@@ -84,6 +84,7 @@
     </aside>
     <main class="col-lg-9">
       <?= flash('borrowing') ?>
+      <?= flash('reservation') ?>
       <?php if (isset($data['reservations'])) : ?>
         <?php require_once APPROOT . '/views/admins/inc/reservations.inc.php' ?>
       <?php elseif (isset($data['borrowings'])) : ?>

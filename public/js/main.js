@@ -22,44 +22,5 @@ dueDateElements.forEach((element) => {
   }
 });
 
-// AJAX To Search For a Book
-const searchForm = document.querySelector('.search-form');
-const queryBox = document.querySelector('.search-form input[name="query"]');
-if (searchForm) {
-  searchForm.addEventListener('submit', function (event) {
-    event.preventDefault();
-    makeRequest('borrowers', this.query.value);
-  });
 
-  queryBox.addEventListener('keyup', function (event) {
-    makeRequest('borrowers', queryBox.value);
-  });
-}
-
-let httpRequest = new XMLHttpRequest();
-function makeRequest(url, query) {
-  httpRequest.onreadystatechange = changeContent;
-  httpRequest.open('POST', url);
-  httpRequest.setRequestHeader(
-    'Content-Type',
-    'application/x-www-form-urlencoded'
-  );
-  httpRequest.send('query=' + encodeURIComponent(query));
-}
-
-function changeContent() {
-  if (httpRequest.readyState === XMLHttpRequest.DONE) {
-    if (httpRequest.status === 200) {
-      var response = httpRequest.responseText;
-      const parser = new DOMParser();
-
-      // Parse the text
-      const doc = parser.parseFromString(response, 'text/html');
-      const BooksList = document.querySelector('.books-list');
-      BooksList.innerHTML = doc.querySelector('.books-list').innerHTML;
-    } else {
-      alert('There was a problem with the request.');
-    }
-  }
-}
 

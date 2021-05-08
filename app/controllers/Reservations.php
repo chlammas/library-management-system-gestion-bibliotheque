@@ -29,7 +29,7 @@ class Reservations extends Controller
     try {
       if ($reservation) {
         flash('reservation', 'You can\'t make more than one resrvation at the same time!', 'alert alert-danger');
-      } elseif ($this->reservationModel->add($barcode, $ISBN)) {
+      } elseif ($this->reservationModel->add($barcode, trim($ISBN))) {
         flash('reservation', 'Book reserved successfully!');
       } else {
         flash('reservation', 'Something wrong!', 'alert alert-danger');

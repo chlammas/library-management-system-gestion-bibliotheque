@@ -61,7 +61,7 @@
                 <td><?= $reservation->Cote ?></td>
                 <td><?= $reservation->Date ?></td>
                 <td>
-                  <button type="button" data-url-root="<?=URLROOT?>" data-barcode="<?= $reservation->Barcode ?>" class="btn btn-outline-primary btn-search btn-approve" data-bs-toggle="modal" data-bs-target="#confrimModal">
+                  <button type="button" data-url-root="<?= URLROOT ?>" data-barcode="<?= $reservation->Barcode ?>" class="btn btn-outline-primary btn-search btn-action" data-bs-toggle="modal" data-bs-target="#confrimModal">
                     <i class="fas fa-ellipsis-h"></i>
                   </button>
                 </td>
@@ -80,11 +80,13 @@
               <form method="POST" action="<?= URLROOT ?>/borrowings/add" class="form-modal">
                 <div class="modal-body">
                   <div class="mb-3 text-start">
-                    <input type="hidden" name="barcode" class="form-control">
+                    <input type="hidden" name="barcode" class="form-control <?php echo (!empty($data['barcode_err'])) ? 'is-invalid' : ''; ?>" value="<?= $data['barcode'] ?? '' ?>">
+                    <span class="invalid-feedback"><?php echo $data['barcode_err']; ?></span>
                     <label class="form-label">Full Name:</label>
-                    <input type="text" name="fullname" class="form-control" readonly>
+                    <input type="text" name="fullname" class="form-control" value="<?= $data['fullname'] ?? '' ?>" readonly>
                     <label class="form-label">Book Inventory:</label>
-                    <input type="text" name="inv" class="form-control" placeholder="Enter Inventory number">
+                    <input type="text" name="inv" class="form-control <?php echo (!empty($data['inv_err'])) ? 'is-invalid' : ''; ?>" placeholder="Enter Inventory number" value="<?= $data['inv'] ?? '' ?>">
+                    <span class="invalid-feedback"><?php echo $data['inv_err']; ?></span>
                   </div>
                 </div>
                 <div class="modal-footer">
@@ -103,23 +105,69 @@
     <?php endif ?>
   </div>
   <script>
-  // Add new borrowing
-(function () {
-  const approveBtns = document.querySelectorAll('.btn-approve');
-  const formModal = document.querySelector('.form-modal');
-  const btnDeleteRes = document.querySelector(
-    '.form-modal .btn-delete-reservation'
-  );
-  approveBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const barcode = btn.dataset.barcode;
-      const urlRoot = btn.dataset.urlRoot;
-      const tds = btn.parentElement.parentElement.children;
-      formModal.barcode.value = barcode;
-      formModal.fullname.value = tds[0].textContent + ' ' + tds[1].textContent;
-      btnDeleteRes.href = urlRoot + '/reservations/cancel/' + barcode;
-    });
-  });
-})();
+    // Delete or approve a reservation
+    (function() {
+      const actionBtns = document.querySelectorAll('.btn-action');
+      const formModal = document.querySelector('.form-modal');
+      const btnDeleteRes = document.querySelector(
+        '.form-modal .btn-delete-reservation'
+      );
 
+      actionBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          // Fill the from with clicked row data
+          const barcode = btn.dataset.barcode;
+          const urlRoot = btn.dataset.urlRoot;
+          const tds = btn.parentElement.parentElement.children;
+          formModal.barcode.value = barcode;
+          formModal.fullname.value = tds[0].textContent + ' ' + tds[1].textContent;
+          // To delete the reservation
+          btnDeleteRes.href = urlRoot + '/reservations/cancel/' + barcode;
+
+
+        });
+      });
+
+      if (formModal) {
+        formModal.addEventListener('submit', function(event) {
+          event.preventDefault();
+          const data = {
+            barcode: formModal.barcode.value,
+            inv: formModal.inv.value,
+            fullname: formModal.fullname.value
+          }
+          makeRequest('<?= URLROOT ?>' + '/borrowings/add', data);
+        });
+      }
+    })();
+
+    let httpRequest = new XMLHttpRequest();
+
+    function makeRequest(url, data) {
+      httpRequest.onreadystatechange = showResult;
+      httpRequest.open('POST', url);
+      httpRequest.setRequestHeader(
+        'Content-Type',
+        'application/x-www-form-urlencoded'
+      );
+      httpRequest.send(`barcode=${encodeURIComponent(data.barcode)}&inv=${encodeURIComponent(data.inv)}&fullname=${encodeURIComponent(data.fullname)}`);
+    }
+
+    function showResult() {
+      if (httpRequest.readyState === XMLHttpRequest.DONE) {
+        if (httpRequest.status === 200) {
+          var response = httpRequest.responseText;
+          const parser = new DOMParser();
+
+          // Parse the text
+          const doc = parser.parseFromString(response, 'text/html');
+          const formModal = document.querySelector('.form-modal');
+          const alertDiv = doc.querySelector('.alert-danger');
+          const newFormModal = doc.querySelector('.form-modal');
+          formModal.innerHTML = alertDiv.outerHTML + newFormModal.innerHTML;
+        } else {
+          alert('There was a problem with the request.');
+        }
+      }
+    }
   </script>
