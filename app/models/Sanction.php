@@ -27,5 +27,14 @@ class Sanction
 
     return $this->db->resultSet();
   }
-
+  public function add($barcode, $endDate, $note=null)
+  {
+    $sql = 'INSERT INTO sanction (BorrowerBarcode, EndDate, Note)
+     VALUES (:BorrowerBarcode, :EndDate, :Note)';
+    $this->db->query($sql);
+    $this->db->bind(':BorrowerBarcode', $barcode);
+    $this->db->bind(':EndDate', $endDate);
+    $this->db->bind(':Note', $note);
+    return $this->db->execute();
+  }
 }
