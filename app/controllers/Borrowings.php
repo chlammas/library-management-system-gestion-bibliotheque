@@ -79,7 +79,7 @@ class borrowings extends Controller
           flash('reservation', $expectedError, 'alert alert-danger');
           $data['inv_err'] = $expectedError;
         } else {
-          $expectedError = strpos($e->getMessage(), 'inv') !== false ? 'Book Inventory is invalid!' : 'Something wrong!';
+          $expectedError = strpos($e->getMessage(), 'Inv') !== false ? 'Book Inventory is invalid!' : 'Something wrong!';
           
           flash('reservation', $expectedError, 'alert alert-danger');
         }
