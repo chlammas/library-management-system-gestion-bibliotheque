@@ -80,20 +80,13 @@ DELIMITER $$
 CREATE TRIGGER `cancel_brrowing` BEFORE INSERT ON `borrowing` FOR EACH ROW BEGIN
 IF (EXISTS (SELECT * FROM sanction WHERE BorrowerBarcode = NEW.BorrowerBarcode)) THEN SIGNAL SQLSTATE '45001' set message_text = "Borrower is blocked !";
 END IF;
-
+-- ----Prevent borrowing the same bookcopy at the same time----- 
 IF (EXISTS (SELECT * FROM borrowing WHERE inv = NEW.inv AND IsReturned = false)) THEN SIGNAL SQLSTATE '45001' set message_text = "This book copy is already borrowed !";
 END IF;
 END
 $$
 DELIMITER ;
 -- -----------
-DELIMITER $$
-CREATE TRIGGER `delete_reservation` AFTER INSERT ON `borrowing` FOR EACH ROW BEGIN
-DELETE FROM reservation WHERE BorrowerBarcode = NEW.BorrowerBarcode;
-END
-$$
-DELIMITER ;
--- ----Prevent borrowing the same bookcopy at the same time----- 
 DELIMITER $$
 CREATE TRIGGER `delete_reservation` AFTER INSERT ON `borrowing` FOR EACH ROW BEGIN
 DELETE FROM reservation WHERE BorrowerBarcode = NEW.BorrowerBarcode;
