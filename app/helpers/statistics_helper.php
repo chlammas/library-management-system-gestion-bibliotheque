@@ -15,6 +15,6 @@ class Statistics extends Controller
   {
     require_once '../app/models/Borrowing.php';
     self::$borrowingModel = new Borrowing;
-    return count(self::$borrowingModel->getAllBorrowings(false));
+    return count(self::$borrowingModel->getBorrowings(false));
   }
 }

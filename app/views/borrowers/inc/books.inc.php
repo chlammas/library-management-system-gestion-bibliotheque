@@ -51,7 +51,9 @@
           </tbody>
         <?php else : ?>
       </table>
-      <p><?php echo $_SERVER['REQUEST_METHOD'] == 'POST' ? 'There are no results that match your search' : '' ?> </p>
+      <tr>
+        <td><?php echo $_SERVER['REQUEST_METHOD'] == 'POST' ? 'There are no results that match your search' : '' ?> </td>
+      </tr>
     </div>
   <?php endif ?>
   </div>
