@@ -5,6 +5,7 @@ class borrowings extends Controller
 
   private Borrowing $borrowingModel;
   private Reservation $reservationModel;
+  private Sanction $sanctionModel;
   private Book $bookModel;
 
   public function __construct()
@@ -15,15 +16,62 @@ class borrowings extends Controller
 
     $this->borrowingModel = $this->model('Borrowing');
     $this->reservationModel = $this->model('Reservation');
+    $this->sanctionModel = $this->model('Sanction');
     $this->bookModel = $this->model('Book');
   }
 
   public function index()
   {
-    $borrowings = $this->borrowingModel->getAllBorrowings();
+    $query = null;
+    $orderby = 'BorrowingDate';
+    $delayed = false;
+    $desc = false;
+    if (isset($_GET['query']) && !empty($_GET['query'])) {
+      $query = $_GET['query'];
+    }
+    if (isset($_GET['orderby']) && !empty($_GET['orderby'])) {
+      $orderby = $_GET['orderby'];
+    }
+    if (isset($_GET['delayed'])) {
+      $delayed = filter_var($_GET['delayed'], FILTER_VALIDATE_BOOLEAN);
+    }
+    if (isset($_GET['desc'])) {
+      $desc = filter_var($_GET['desc'], FILTER_VALIDATE_BOOLEAN);
+    }
+    $borrowings = $this->borrowingModel->getBorrowings(false, $query, $orderby, $delayed, $desc);
+
 
     $data = [
+      'card-header' => 'Not returned borrowings :',
       'borrowings' => $borrowings,
+      'status' => 'not returned',
+    ];
+    $this->view('admins/index', $data);
+  }
+
+  public function archive()
+  {
+    $query = null;
+    $orderby = 'BorrowingDate';
+    $delayed = false;
+    $desc = false;
+    if (isset($_GET['query']) && !empty($_GET['query'])) {
+      $query = $_GET['query'];
+    }
+    if (isset($_GET['orderby']) && !empty($_GET['orderby'])) {
+      $orderby = $_GET['orderby'];
+    }
+    if (isset($_GET['delayed'])) {
+      $delayed = filter_var($_GET['delayed'], FILTER_VALIDATE_BOOLEAN);
+    }
+    if (isset($_GET['desc'])) {
+      $desc = filter_var($_GET['desc'], FILTER_VALIDATE_BOOLEAN);
+    }
+    $borrowings = $this->borrowingModel->getBorrowings(true, $query, $orderby, $delayed, $desc);
+    $data = [
+      'card-header' => 'Returned borrowings :',
+      'borrowings' => $borrowings,
+      'status' => 'returned'
     ];
     $this->view('admins/index', $data);
   }
@@ -37,72 +85,56 @@ class borrowings extends Controller
 
   public function add()
   {
+  }
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  public function confirm()
+  {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
       $data = [
+        'sanction' => $_POST['sanction'] ?? false,
         'barcode' => isset($_POST['barcode']) ? trim($_POST['barcode']) : '',
-        'barcode_err' => '',
-        'inv' => isset($_POST['inv']) ? trim($_POST['inv']) : '',
-        'inv_err' => '',
-        'fullname' => isset($_POST['fullname']) ? trim($_POST['fullname']) : '',
-        'general_err' => ''
+        'idborrowing' => isset($_POST['idborrowing']) ? trim($_POST['idborrowing']) : '',
+        'enddate' => isset($_POST['enddate']) ? trim($_POST['enddate']) : '',
+        'enddate_err' => '',
+        'note' => isset($_POST['note']) ? trim($_POST['note']) : '',
       ];
 
-      if (empty($data['barcode'])) {
-        $data['barcode_err'] = 'Invalid borrower barcode';
-      }
-      if (empty($data['inv'])) {
-        $data['inv_err'] = 'Please scan book inventory number';
-      }
-
-
-      if (strpos($_SERVER["HTTP_REFERER"], 'reservations') !== false) {
-        $reservations = $this->reservationModel->getAllReservations();
-        $data['reservations'] = $reservations;
-      } else {
-        $borrowings = $this->borrowingModel->getAllBorrowings();
-        $data['borrowings'] = $borrowings;
-      }
-
-      // Make sure there is no error
-      if (empty($data['barcode_err']) && empty($data['inv_err'])) {
-        try {
-        $this->borrowingModel->add($data['barcode'], $data['inv']);
-          flash('borrowing', 'Book borrowed successfully!');
-          redirect('borrowings');
-        
-      } catch (PDOException $e) {
-        $expectedError = 'This book copy is already borrowed !';
-        if (strpos($e->getMessage(), $expectedError) !== false) {
-          flash('reservation', $expectedError, 'alert alert-danger');
-          $data['inv_err'] = $expectedError;
+      if ($data['sanction']) {
+        if (empty($data['enddate'])) {
+          flash('borrowing', 'End date is required!', 'alert alert-danger');
+          $data['enddate_err'] = 'Invalid end date!';
+        } elseif (strtotime($data['enddate']) <= strtotime(date("Y/m/d"))) {
+          flash('borrowing', 'End date must be greather than current date', 'alert alert-danger');
+          $data['enddate_err'] = 'End date must be greather than current date!';
+        } elseif (empty($data['barcode'])) {
+          flash('borrowing', 'Something wrong!', 'alert alert-danger');
         } else {
-          $expectedError = strpos($e->getMessage(), 'Inv') !== false ? 'Book Inventory is invalid!' : 'Something wrong!';
-          
-          flash('reservation', $expectedError, 'alert alert-danger');
+          try {
+            $this->sanctionModel->add($data['barcode'], $data['enddate'], $data['note']);
+          } catch (PDOException $e) {
+            flash('borrowing', 'Something wrong!', 'alert alert-danger');
+          }
         }
-          $this->view('admins/index', $data);
       }
-      } else {
-        $err_msg = '<ul>';
-        $err_msg .= $data['barcode_err'] ?  '<li>' . $data['barcode_err'] . '</li>' : '';
-        $err_msg .= $data['inv_err'] ?  '<li>' . $data['inv_err'] . '</li>' : '';
-        $err_msg .= '</ul>';
 
-        flash('borrowing', $err_msg, 'alert alert-danger');
-        $this->view('admins/index', $data);
+      if (empty($data['idborrowing'])) {
+
+        flash('borrowing', 'Something wrong!', 'alert alert-danger');
+      } else {
+        try {
+          $this->borrowingModel->confirm($data['idborrowing']);
+          flash('borrowing', 'Book returned successfully!');
+        } catch (PDOException $e) {
+          flash('reservation', 'Something wrong!', 'alert alert-danger');
+        }
+        redirect('borrowings');
       }
     } else {
-      $reservations = $this->reservationModel->getAllReservations();
-      $data['reservations'] = $reservations;
+      $borrowings = $this->borrowingModel->getBorrowings();
+      $data['borrowings'] = $borrowings;
       $this->view('admins/index', $data);
     }
-  }
-
-  public function detail($isbn)
-  {
-    echo 'detail of book' . $isbn;
   }
 }

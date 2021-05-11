@@ -29,9 +29,9 @@ class Borrowing
     return $this->db->single();
   }
 
-  public function getAllBorrowings(Bool $returned = null)
+  public function getBorrowings(Bool $returned = null, $query = '', $orderby = 'BorrowingDate', Bool $delayed = false, Bool $desc = false)
   {
-    $sql = 'SELECT Firstname, Lastname, CIN, bg.Id, bc.ISBN, Title, Category, Author, bg.Inv, BorrowingDate, DueDate 
+    $sql = 'SELECT Barcode, Firstname, Lastname, CIN, bg.Id, bc.ISBN, Title, Category, Author, bg.Inv, BorrowingDate, DueDate, IsReturned, ReturnedDate 
     FROM borrower br
     INNER JOIN borrowing bg ON br.Barcode = bg.BorrowerBarcode
     INNER JOIN bookcopy bc ON bg.Inv = bc.INV
@@ -43,8 +43,18 @@ class Borrowing
     if (!is_null($returned)) {
       $sql .= ' AND IsReturned = ' . var_export($returned, true);
     }
+    if ($delayed) {
+      $sql .= ' AND DueDate < CURRENT_DATE';
+    }
+    $sql .= ' WHERE (Firstname LIKE :query or Lastname LIKE :query or CIN LIKE :query or Title LIKE :query or Author LIKE :query or Category LIKE :query)';
+    $sql .= ' ORDER BY ' . $orderby;
+    if ($desc) {
+      $sql .= ' DESC';
+    }
 
     $this->db->query($sql);
+    $this->db->bind(':query', '%' . $query . '%');
+
     return $this->db->resultSet();
   }
 
@@ -56,6 +66,15 @@ class Borrowing
     $this->db->query($sql);
     $this->db->bind(':BorrowerBarcode', $barcode);
     $this->db->bind(':Inv', $inv);
+    return $this->db->execute();
+  }
+
+  public function confirm($id)
+  {
+
+    $sql = 'UPDATE borrowing SET IsReturned = true, ReturnedDate = CURRENT_DATE WHERE Id = :Id';
+    $this->db->query($sql);
+    $this->db->bind(':Id', $id);
     return $this->db->execute();
   }
 }

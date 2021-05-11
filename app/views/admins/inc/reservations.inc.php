@@ -66,7 +66,7 @@
                 <h5 class="modal-title" id="confrimModalLabel">Approve the borrowing :</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-              <form method="POST" action="<?= URLROOT ?>/borrowings/add" class="form-modal">
+              <form method="POST" action="<?= URLROOT ?>/reservations/confirm" class="form-modal">
                 <div class="modal-body">
                   <div class="mb-3 text-start">
                     <input type="hidden" name="barcode" class="form-control <?php echo (!empty($data['barcode_err'])) ? 'is-invalid' : ''; ?>" value="<?= $data['barcode'] ?? '' ?>">
@@ -104,7 +104,7 @@
 
       actionBtns.forEach((btn) => {
         btn.addEventListener('click', () => {
-          // Fill the from with clicked row data
+          // Fill the form with clicked row data
           const barcode = btn.dataset.barcode;
           const urlRoot = btn.dataset.urlRoot;
           const tds = btn.parentElement.parentElement.children;
@@ -116,47 +116,6 @@
 
         });
       });
-
-      if (formModal) {
-        formModal.addEventListener('submit', function(event) {
-          event.preventDefault();
-          const data = {
-            barcode: formModal.barcode.value,
-            inv: formModal.inv.value,
-            fullname: formModal.fullname.value
-          }
-          makeRequest('<?= URLROOT ?>' + '/borrowings/add', data);
-        });
-      }
     })();
 
-    let httpRequest = new XMLHttpRequest();
-
-    function makeRequest(url, data) {
-      httpRequest.onreadystatechange = showResult;
-      httpRequest.open('POST', url);
-      httpRequest.setRequestHeader(
-        'Content-Type',
-        'application/x-www-form-urlencoded'
-      );
-      httpRequest.send(`barcode=${encodeURIComponent(data.barcode)}&inv=${encodeURIComponent(data.inv)}&fullname=${encodeURIComponent(data.fullname)}`);
-    }
-
-    function showResult() {
-      if (httpRequest.readyState === XMLHttpRequest.DONE) {
-        if (httpRequest.status === 200) {
-          var response = httpRequest.responseText;
-          const parser = new DOMParser();
-
-          // Parse the text
-          const doc = parser.parseFromString(response, 'text/html');
-          const formModal = document.querySelector('.form-modal');
-          const alertDiv = doc.querySelector('.alert-danger');
-          const newFormModal = doc.querySelector('.form-modal');
-          formModal.innerHTML = alertDiv.outerHTML + newFormModal.innerHTML;
-        } else {
-          alert('There was a problem with the request.');
-        }
-      }
-    }
   </script>

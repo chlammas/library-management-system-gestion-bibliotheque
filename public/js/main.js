@@ -7,20 +7,22 @@
 // })
 
 /* Notify the borrower that is late */
-let dueDateElements = document.querySelectorAll('.due-date span');
-dueDateElements.forEach((element) => {
-  startDate = new Date(element.textContent);
-  todayDate = new Date(new Date().toDateString());
-  if (startDate - todayDate < 0) {
-    setInterval(() => {
-      if (element.style.color == 'red') {
-        element.style.color = '#212537';
-      } else {
-        element.style.color = 'red';
-      }
-    }, 500);
-  }
-});
-
-
-
+window.onload = () => {
+  changeDateColor();
+};
+function changeDateColor() {
+  let dueDateElements = document.querySelectorAll('.due-date span');
+  dueDateElements.forEach((element) => {
+    startDate = new Date(element.textContent);
+    todayDate = new Date(new Date().toDateString());
+    if (startDate - todayDate < 0) {
+      setInterval(() => {
+        if (element.style.color == 'red') {
+          element.style.color = '#212537';
+        } else {
+          element.style.color = 'red';
+        }
+      }, 500);
+    }
+  });
+}
