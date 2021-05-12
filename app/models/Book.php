@@ -28,4 +28,19 @@ class Book
     return $this->db->resultSet();
   }
 
+  public function findBookByInv($inv)
+  {
+
+    $sql = "SELECT Title, Inv, Author, Cote FROM availablebooks a 
+            INNER JOIN bookcopy b ON a.ISBN = b.ISBN 
+            WHERE Inv = :Inv";
+
+    $this->db->query($sql);
+    $this->db->bind(':Inv', $inv);
+
+    return $this->db->single();
+  }
+
+
+
 }

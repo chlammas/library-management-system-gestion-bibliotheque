@@ -182,9 +182,11 @@
       <?= flash('borrowing') ?>
       <?= flash('reservation') ?>
       <?php if (isset($data['reservations'])) : ?>
-        <?php require_once APPROOT . '/views/admins/inc/reservations.inc.php' ?>
+        <?php require_once APPROOT . '/views/admins/inc/reservations/reservations.inc.php' ?>
       <?php elseif (isset($data['borrowings'])) : ?>
-        <?php require_once APPROOT . '/views/admins/inc/borrowings.inc.php' ?>
+        <?php require_once APPROOT . '/views/admins/inc/borrowings/borrowings.inc.php' ?>
+      <?php elseif (isset($data['add'])) : ?>
+        <?php require_once APPROOT . '/views/admins/inc/borrowings/addborrowing.inc.php' ?>
       <?php else : ?>
         <h6>Demo for sidebar nav menu links. <br> Based on Bootstrap 5 CSS framework. </h6>
         <p>For this demo page you should connect to the internet to receive files from CDN like Bootstrap5 CSS, Bootstrap5 JS</p>

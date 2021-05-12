@@ -22,24 +22,8 @@ class borrowings extends Controller
 
   public function index()
   {
-    $query = null;
-    $orderby = 'BorrowingDate';
-    $delayed = false;
-    $desc = false;
-    if (isset($_GET['query']) && !empty($_GET['query'])) {
-      $query = $_GET['query'];
-    }
-    if (isset($_GET['orderby']) && !empty($_GET['orderby'])) {
-      $orderby = $_GET['orderby'];
-    }
-    if (isset($_GET['delayed'])) {
-      $delayed = filter_var($_GET['delayed'], FILTER_VALIDATE_BOOLEAN);
-    }
-    if (isset($_GET['desc'])) {
-      $desc = filter_var($_GET['desc'], FILTER_VALIDATE_BOOLEAN);
-    }
-    $borrowings = $this->borrowingModel->getBorrowings(false, $query, $orderby, $delayed, $desc);
 
+    $borrowings = $this->getBorrowings($_GET, false);
 
     $data = [
       'card-header' => 'Not returned borrowings :',
@@ -51,23 +35,8 @@ class borrowings extends Controller
 
   public function archive()
   {
-    $query = null;
-    $orderby = 'BorrowingDate';
-    $delayed = false;
-    $desc = false;
-    if (isset($_GET['query']) && !empty($_GET['query'])) {
-      $query = $_GET['query'];
-    }
-    if (isset($_GET['orderby']) && !empty($_GET['orderby'])) {
-      $orderby = $_GET['orderby'];
-    }
-    if (isset($_GET['delayed'])) {
-      $delayed = filter_var($_GET['delayed'], FILTER_VALIDATE_BOOLEAN);
-    }
-    if (isset($_GET['desc'])) {
-      $desc = filter_var($_GET['desc'], FILTER_VALIDATE_BOOLEAN);
-    }
-    $borrowings = $this->borrowingModel->getBorrowings(true, $query, $orderby, $delayed, $desc);
+    $borrowings = $this->getBorrowings($_GET, true);
+
     $data = [
       'card-header' => 'Returned borrowings :',
       'borrowings' => $borrowings,
@@ -75,16 +44,91 @@ class borrowings extends Controller
     ];
     $this->view('admins/index', $data);
   }
-
-  public function search($queryname)
+  private function getBorrowings($request, Bool $returned = null)
   {
-    $data = [];
-    echo 'books of ' . $queryname;
-    $this->view('borrowings/index', $data);
+    $query = null;
+    $orderby = 'BorrowingDate';
+    $delayed = false;
+    $desc = false;
+    if (isset($request['query']) && !empty($request['query'])) {
+      $query = $request['query'];
+    }
+    if (isset($request['orderby']) && !empty($request['orderby'])) {
+      $orderby = $request['orderby'];
+    }
+    if (isset($request['delayed'])) {
+      $delayed = filter_var($request['delayed'], FILTER_VALIDATE_BOOLEAN);
+    }
+    if (isset($request['desc'])) {
+      $desc = filter_var($request['desc'], FILTER_VALIDATE_BOOLEAN);
+    }
+    return $this->borrowingModel->getBorrowings($returned, $query, $orderby, $delayed, $desc);
   }
+
 
   public function add()
   {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+      $data = [
+        'barcode' => isset($_POST['barcode']) ? trim($_POST['barcode']) : '',
+        'barcode_err' => '',
+        'inv' => isset($_POST['inv']) ? trim($_POST['inv']) : '',
+        'inv_err' => '',
+        'fullname' => isset($_POST['fullname']) ? trim($_POST['fullname']) : '',
+        'card-header' => 'Not returned borrowings :',
+        'status' => 'not returned',
+        'referer' => 'borrowings'
+      ];
+
+      if (strpos($_SERVER["HTTP_REFERER"], 'reservations') !== false) {
+        $data['referer'] = 'reservations';
+      }
+
+      if (empty($data['barcode'])) {
+        $data['barcode_err'] = 'Invalid borrower barcode';
+      }
+      if (empty($data['inv'])) {
+        $data['inv_err'] = 'Please scan book inventory number';
+      }
+
+      // Make sure there is no error
+      if (empty($data['barcode_err']) && empty($data['inv_err'])) {
+        try {
+          $this->borrowingModel->add($data['barcode'], $data['inv']);
+          flash('borrowing', 'Book borrowed successfully!');
+          redirect('borrowings');
+        } catch (PDOException $e) {
+          $expectedError = 'This book copy is already borrowed !';
+          if (strpos($e->getMessage(), $expectedError) !== false) {
+            flash('reservation', $expectedError, 'alert alert-danger');
+            $data['inv_err'] = $expectedError;
+          } else {
+            $expectedError = strpos($e->getMessage(), 'Inv') !== false ? 'Book Inventory is invalid!' : 'Something wrong!';
+
+            flash('reservation', $expectedError, 'alert alert-danger');
+          }
+          redirect($data['referer']);
+        }
+      } else {
+        $err_msg = '<ul>';
+        $err_msg .= $data['barcode_err'] ?  '<li>' . $data['barcode_err'] . '</li>' : '';
+        $err_msg .= $data['inv_err'] ?  '<li>' . $data['inv_err'] . '</li>' : '';
+        $err_msg .= '</ul>';
+
+        flash('reservation', $err_msg, 'alert alert-danger');
+        redirect($data['referer']);
+      }
+    } else {
+      $data = [
+        'add' => true,
+        'sanctions' => '',
+        'borrower' => '',
+        'bookcopy' => '',
+      ];
+      $this->view('admins/index', $data);
+    }
   }
 
   public function confirm()

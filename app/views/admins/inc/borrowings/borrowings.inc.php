@@ -222,7 +222,7 @@
       const delayedBorrowings = document.getElementById('DelayedBorrowings');
       const desc = document.getElementById('Desc');
 
-      if (searchForm) {
+      if (queryBox) {
         queryBox.addEventListener('keyup', function(event) {
           filterBorrowings("<?= $data['status'] ?>");
         });

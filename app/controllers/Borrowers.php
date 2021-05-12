@@ -71,7 +71,42 @@ class Borrowers extends Controller
     }
   }
 
-
+  public function findBorrowerByBarCode()
+  {
+    if (!isAdminLoggedIn()) {
+      redirect('');
+    }
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['code'])) {
+      $borrower = $this->borrowerModel->findBorrowerByBarCode($_POST['code']);
+      if ($borrower) {
+        echo '
+              <div class="card border-warning mb-3" style="max-width: 540px;">
+              <div class="row g-0">
+                <div class="col-md-4">
+                  <img src="' . URLROOT . '/img/borrower.png" class="card-img" alt="...">
+                </div>
+                <div class="col-md-8">
+                  <div class="card-body">
+                    <h5 class="card-title">' . $borrower->Firstname . ' ' . $borrower->Lastname . '</h5>
+                    <ul class="card-text list-unstyled fw-normal pb-1">
+                      <li>Barcode : <small class="text-muted">' . $borrower->Barcode . '</small></li>
+                      <li>CIN : <small class="text-muted">' . $borrower->CIN . '</small></li>
+                      <li>Program : <small class="text-muted">' . $borrower->Program . '</small></li>
+                      <li class="alert-warning">Sanctions : <small class="text-muted">2</small></li>
+                    </ul>
+                    <p class="card-text"><small class="text-muted">Last sanction 3 years ago</small></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+      
+      ';
+      } else {
+        http_response_code(404);
+        echo 'Borrower not found';
+      }
+    }
+  }
   public function logout()
   {
     userLogout();
