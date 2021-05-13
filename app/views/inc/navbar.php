@@ -5,7 +5,7 @@
       <li class="nav-item"><a href="<?php echo URLROOT ?>/borrowers/logout" class="nav-link">Logout</a></li> -->
       <div class="dropdown">
         <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-          <img src="https://github.com/mdo.png" alt="<?= $_SESSION['borrower_firstname'] . ' ' . $_SESSION['borrower_lastname'] ?>" width="32" height="32" class="rounded-circle me-2">
+          <img src="<?=URLROOT?>/img/user.png" alt="<?= $_SESSION['borrower_firstname'] . ' ' . $_SESSION['borrower_lastname'] ?>" width="32" height="32" class="rounded-circle me-2">
           <strong><?= $_SESSION['borrower_firstname'] . ' ' . $_SESSION['borrower_lastname'] ?></strong>
         </a>
         <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
@@ -20,7 +20,7 @@
     <?php elseif (isAdminLoggedIn()) : ?>
       <div class="dropdown">
         <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-          <img src="https://github.com/mdo.png" alt="<?= $_SESSION['admin_firstname'] . ' ' . $_SESSION['admin_lastname'] ?>" width="32" height="32" class="rounded-circle me-2">
+          <img src="<?=URLROOT?>/img/admin.png" alt="<?= $_SESSION['admin_firstname'] . ' ' . $_SESSION['admin_lastname'] ?>" width="32" height="32" class="rounded-circle me-2">
           <strong><?= $_SESSION['admin_firstname'] . ' ' . $_SESSION['admin_lastname'] ?></strong>
         </a>
         <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
