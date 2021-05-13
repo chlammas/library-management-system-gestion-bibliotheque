@@ -115,9 +115,11 @@
         if (to === 'book') {
           cardBook.outerHTML = httpRequest.responseText
           confirmForm.inv.value = searchForm.code.value
+          searchForm.code.value = ""
         } else {
           confirmForm.barcode.value = searchForm.code.value
           cardBorrower.outerHTML = httpRequest.responseText
+          searchForm.code.value = ""
         }
 
 

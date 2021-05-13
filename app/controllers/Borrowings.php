@@ -79,7 +79,7 @@ class borrowings extends Controller
         'fullname' => isset($_POST['fullname']) ? trim($_POST['fullname']) : '',
         'card-header' => 'Not returned borrowings :',
         'status' => 'not returned',
-        'referer' => 'borrowings'
+        'referer' => 'borrowings/add'
       ];
 
       if (strpos($_SERVER["HTTP_REFERER"], 'reservations') !== false) {
@@ -122,7 +122,7 @@ class borrowings extends Controller
       }
     } else {
       $data = [
-        'add' => true,
+        'add_borrowing' => true,
         'sanctions' => '',
         'borrower' => '',
         'bookcopy' => '',
