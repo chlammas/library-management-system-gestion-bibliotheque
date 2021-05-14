@@ -18,7 +18,7 @@ CREATE TABLE `book` (
   `Type` varchar(64) NOT NULL,
   `Category` varchar(256) NOT NULL,
   `Edition` varchar(256) DEFAULT NULL,
-  `Cote` varchar(64) NOT NULL,
+  `Rack` varchar(64) NOT NULL,
   `Author` varchar(256) NOT NULL,
   PRIMARY KEY (`ISBN`)
 );
@@ -100,18 +100,28 @@ CREATE TRIGGER `cancel_reservation` BEFORE INSERT ON `reservation` FOR EACH ROW 
 $$
 DELIMITER ;
 
+-- -- for`book`
+DELIMITER $$
+CREATE TRIGGER `cancel_adding` BEFORE INSERT ON `book` FOR EACH ROW BEGIN IF (EXISTS (SELECT * FROM book WHERE ISBN = NEW.ISBN)) THEN SIGNAL SQLSTATE '45001' set message_text = "This book was already added!"; END IF; END
+$$
+DELIMITER ;
+
 -- Views
 
-CREATE VIEW availablebooks as SELECT * FROM book WHERE ISBN IN (SELECT ISBN FROM bookcopy WHERE Inv NOT IN (SELECT Inv FROM borrowing));
+CREATE VIEW availablebooks as SELECT *, 'Available' AS `Status` FROM book WHERE ISBN IN (SELECT ISBN FROM bookcopy WHERE Inv NOT IN (SELECT Inv FROM borrowing));
 
-CREATE VIEW outofstockbooks as SELECT * FROM book WHERE ISBN NOT IN (SELECT ISBN FROM availablebooks);
+CREATE VIEW outofstockbooks as SELECT *, 'Out of stock' AS `Status` FROM book WHERE ISBN NOT IN (SELECT ISBN FROM availablebooks);
 
+CREATE VIEW allbooks AS
+SELECT * FROM outofstockbooks 
+UNION 
+SELECT * FROM availablebooks;
 -- Insert test
 INSERT INTO `administrator` (`Barcode`, `Firstname`, `Lastname`) VALUES
 ('446541749', 'Ahmadi', 'Jamal'),
 ('821741368', 'Asmaa', 'Mohamed');
 
-INSERT INTO `book` (`ISBN`, `Title`, `Type`, `Category`, `Edition`, `Cote`, `Author`) VALUES
+INSERT INTO `book` (`ISBN`, `Title`, `Type`, `Category`, `Edition`, `Rack`, `Author`) VALUES
 ('3454313235412', 'The test book', 'test', 'test', 'first', 'swd', 'me'),
 ('5745455466210', 'Superfreakonomics', 'Novel', 'economics', 'fifth', 'DMU', 'Dubner'),
 ('6475121554783', 'Data Scientists at Work', 'Self-Help', 'data science', 'first', 'JUI', 'Sebastian'),
