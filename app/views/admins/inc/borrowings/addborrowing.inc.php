@@ -30,10 +30,10 @@
   </div>
 </div>
 <div class="card-group">
-  <div class="card border-warning mb-3 borrower-card" style="max-width: 540px;">
+  <div class="card border-success mb-3 borrower-card" style="max-width: 540px;">
     <!-- Borrrower info will be here -->
   </div>
-  <div class="card border-warning mb-3 book-card" style="max-width: 540px;">
+  <div class="card border-success mb-3 book-card" style="max-width: 540px;">
     <!-- Book info will be here -->
   </div>
 </div>

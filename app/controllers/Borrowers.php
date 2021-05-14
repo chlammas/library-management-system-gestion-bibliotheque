@@ -77,10 +77,25 @@ class Borrowers extends Controller
       redirect('');
     }
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['code'])) {
-      $borrower = $this->borrowerModel->findBorrowerByBarCode($_POST['code']);
+      $borrower = $this->borrowerModel->findBorrowerByBarCode(Trim($_POST['code']));
       if ($borrower) {
+        $alert = 'success';
+        $msg = '';
+        $sanctionsCount = 0;
+        $sanctions = $this->sanctionModel->findSanctionsByUserCode($borrower->Barcode); // Check for applied sactions
+        if ($sanctions) {
+          $alert = 'danger';
+          $msg = 'This borrower is blocked, please unblock them before completing the proccess!';
+          $sanctionsCount = count($this->sanctionModel->findSanctionsByUserCode($borrower->Barcode, false));
+        } else {
+          $sanctions = $this->sanctionModel->findSanctionsByUserCode($borrower->Barcode, false); // Check for sanctions in history
+          if ($sanctions) {
+            $alert = 'warning';
+            $sanctionsCount = Count($sanctions);
+          }
+        }
         echo '
-              <div class="card border-warning mb-3" style="max-width: 540px;">
+              <div class="card border-' . $alert . ' mb-3 borrower-card" style="max-width: 540px;">
               <div class="row g-0">
                 <div class="col-md-4">
                   <img src="' . URLROOT . '/img/borrower.png" class="card-img" alt="...">
@@ -92,9 +107,9 @@ class Borrowers extends Controller
                       <li>Barcode : <small class="text-muted">' . $borrower->Barcode . '</small></li>
                       <li>CIN : <small class="text-muted">' . $borrower->CIN . '</small></li>
                       <li>Program : <small class="text-muted">' . $borrower->Program . '</small></li>
-                      <li class="alert-warning">Sanctions : <small class="text-muted">2</small></li>
+                      <li class="alert-' . $alert . '">Sanctions : <small class="text-muted">' . $sanctionsCount . '</small></li>
                     </ul>
-                    <p class="card-text"><small class="text-muted">Last sanction 3 years ago</small></p>
+                    <p class="card-text"><small class="text-muted">' . $msg . '</small></p>
                   </div>
                 </div>
               </div>

@@ -132,10 +132,10 @@
           </li> -->
           <li class="mb-1">
 
-            <a class="btn btn-toggle align-items-center rounded nav-link nav-link-custom link-dark collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="false">
+            <a class="btn btn-toggle align-items-center rounded nav-link nav-link-custom link-dark collapsed" data-bs-toggle="collapse" data-bs-target="#borrowings-collapse" aria-expanded="false">
               Borrowings
             </a>
-            <div class="collapse" id="home-collapse">
+            <div class="collapse" id="borrowings-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                 <li><a href="<?= URLROOT ?>/borrowings/add" class="link-dark rounded">Add new</a></li>
                 <li>
@@ -149,11 +149,26 @@
             </div>
           </li>
 
-          <li class="nav-item">
-            <a href="<?= URLROOT ?>/books" class="nav-link nav-link-custom link-dark">
-              Books
+          <li class="mb-1">
+
+            <a class="btn btn-toggle align-items-center rounded nav-link nav-link-custom link-dark collapsed" data-bs-toggle="collapse" data-bs-target="#books-collapse" aria-expanded="false">
+              Books&nbsp;&nbsp; <span title="Out of stock" class="badge bg-secondary rounded-pill"><?= Statistics::OutOfStockBooksCount() ?></span>
             </a>
+            <div class="collapse" id="books-collapse">
+              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="<?= URLROOT ?>/books/add" class="link-dark rounded">Add new</a></li>
+                <li>
+                <a href="<?= URLROOT ?>/books" class="link-dark rounded">
+                  All books
+                </a>
+                </li>
+                
+
+              </ul>
+            </div>
           </li>
+
+         
           <li class="nav-item">
             <a href="#" class="nav-link nav-link-custom link-dark">
               Borrowers
@@ -181,12 +196,17 @@
     <main class="col-lg-9">
       <?= flash('borrowing') ?>
       <?= flash('reservation') ?>
+      <?= flash('book') ?>
       <?php if (isset($data['reservations'])) : ?>
         <?php require_once APPROOT . '/views/admins/inc/reservations/reservations.inc.php' ?>
       <?php elseif (isset($data['borrowings'])) : ?>
         <?php require_once APPROOT . '/views/admins/inc/borrowings/borrowings.inc.php' ?>
-      <?php elseif (isset($data['add'])) : ?>
+      <?php elseif (isset($data['add_borrowing'])) : ?>
         <?php require_once APPROOT . '/views/admins/inc/borrowings/addborrowing.inc.php' ?>
+      <?php elseif (isset($data['books'])) : ?>
+        <?php require_once APPROOT . '/views/admins/inc/books/books.inc.php' ?>
+      <?php elseif (isset($data['add_book']) || isset($data['edit_book'])) : ?>
+        <?php require_once APPROOT . '/views/admins/inc/books/addbook.inc.php' ?>
       <?php else : ?>
         <h6>Demo for sidebar nav menu links. <br> Based on Bootstrap 5 CSS framework. </h6>
         <p>For this demo page you should connect to the internet to receive files from CDN like Bootstrap5 CSS, Bootstrap5 JS</p>
