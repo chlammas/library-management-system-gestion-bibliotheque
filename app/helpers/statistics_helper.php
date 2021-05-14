@@ -3,6 +3,7 @@ class Statistics extends Controller
 {
   static Borrowing $borrowingModel;
   static Reservation $reservationModel;
+  static Book $bookModel;
 
   static function reservationsCount()
   {
@@ -16,5 +17,11 @@ class Statistics extends Controller
     require_once '../app/models/Borrowing.php';
     self::$borrowingModel = new Borrowing;
     return count(self::$borrowingModel->getBorrowings(false));
+  }
+  static function OutOfStockBooksCount()
+  {
+    require_once '../app/models/Borrowing.php';
+    self::$bookModel = new Book;
+    return count(self::$bookModel->findBooks(false));
   }
 }
