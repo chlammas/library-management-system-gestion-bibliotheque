@@ -33,7 +33,7 @@
               <th scope="col">Title</th>
               <th scope="col">Category</th>
               <th scope="col">Author</th>
-              <th scope="col">Cote</th>
+              <th scope="col">Rack</th>
               <th scope="col">Date</th>
               <th scope="col">Action</th>
             </tr>
@@ -47,7 +47,7 @@
                 <td><?= $reservation->Title ?></td>
                 <td><?= $reservation->Category ?></td>
                 <td><?= $reservation->Author ?></td>
-                <td><?= $reservation->Cote ?></td>
+                <td><?= $reservation->Rack ?></td>
                 <td><?= $reservation->Date ?></td>
                 <td>
                   <button type="button" data-url-root="<?= URLROOT ?>" data-barcode="<?= $reservation->Barcode ?>" class="btn btn-outline-primary btn-search btn-action" data-bs-toggle="modal" data-bs-target="#confrimModal">
