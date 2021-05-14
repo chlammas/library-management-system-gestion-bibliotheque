@@ -23,7 +23,7 @@ class Reservation
 
   public function getAllReservations()
   {
-    $sql = 'SELECT br.Barcode, Firstname, Lastname, r.ISBN, Title, Category, Author, Cote, Date 
+    $sql = 'SELECT br.Barcode, Firstname, Lastname, r.ISBN, Title, Category, Author, Rack, Date 
     FROM borrower br
     INNER JOIN reservation r ON br.Barcode = r.BorrowerBarcode
     INNER JOIN book b ON r.ISBN = b.ISBN';
