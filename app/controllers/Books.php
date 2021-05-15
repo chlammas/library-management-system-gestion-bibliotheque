@@ -18,10 +18,11 @@ class Books extends Controller
     $data = [
       'books' => '',
       'query' => isset($_GET['query']) ? trim($_GET['query']) : '',
-      'available' => isset($_GET['available']) ? filter_var(trim($_GET['available']), FILTER_VALIDATE_BOOLEAN) : null
+      'filterby' => isset($_GET['filterby']) ? trim($_GET['filterby']) : '',
+      'orderby' => isset($_GET['orderby']) ? trim($_GET['orderby']) : 'ISBN',
     ];
-
-    $books = $this->bookModel->findBooks($data['query'], $data['available']);
+    
+    $books = $this->bookModel->findBooks($data['query'], $data['filterby'], $data['orderby']);
     $data['books'] = $books;
 
     $this->view('admins/index', $data);
@@ -84,7 +85,7 @@ class Books extends Controller
           $this->view('admins/index', $data);
         }
       } else {
-        flash('reservation', $err_msg, 'alert alert-danger');
+        flash('book', $err_msg, 'alert alert-danger');
         $data['add_book'] = true;
         $this->view('admins/index', $data);
       }
@@ -99,9 +100,9 @@ class Books extends Controller
   public function edit($isbn)
   {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-      
+
       list($noError, $err_msg, $data) = $this->validateRequest($_POST);
-      
+
       // Make sure there is no error
       if ($noError) {
         try {
@@ -109,9 +110,9 @@ class Books extends Controller
           flash('book', 'Book was updated successfully!');
           redirect('books');
         } catch (PDOException $e) {
-            flash('book', 'Something wrong!', 'alert alert-danger');
-            $data['edit_book'] = true;
-            $this->view('admins/index', $data);
+          flash('book', 'Something wrong!', 'alert alert-danger');
+          $data['edit_book'] = true;
+          $this->view('admins/index', $data);
         }
       } else {
         flash('book', $err_msg, 'alert alert-danger');
@@ -136,6 +137,53 @@ class Books extends Controller
 
         $this->view('admins/index', $data);
       }
+    }
+  }
+  public function addcopy($isbn = '')
+  {
+    $book = $this->bookModel->findBookByISBN($isbn);
+    if (!$book) {
+      redirect('books');
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+      $data = [
+        'inv' => isset($_POST['inv']) ? trim($_POST['inv']) : '',
+        'inv_err' => '',
+      ];
+
+      if (empty($data['inv'])) {
+        $data['inv_err'] = 'Please enter an inventory number!';
+      } elseif ($this->bookModel->findBookByInv($data['inv'])) {
+        $data['inv_err'] = 'This inventory number is taken!';
+      }
+      // Make sure there is no error
+      if (empty($data['inv_err'])) {
+        try {
+          $this->bookModel->addcopy($isbn, $data['inv']);
+          flash('book', 'Book copy was added successfully!');
+          return redirect('books/addcopy/' . $isbn);
+        } catch (PDOException $e) {
+          flash('book', 'Something wrong!', 'alert alert-danger');
+        }
+      } else {
+        flash('book', $data['inv_err'], 'alert alert-danger');
+        $data['add_book_copy'] = true;
+        $data['isbn'] = $book->ISBN;
+        $data['title'] = $book->Title;
+        $this->view('admins/index', $data);
+      }
+    } else {
+      $data = [
+        'add_book_copy' => true,
+        'isbn' => $book->ISBN,
+        'title' => $book->Title,
+
+      ];
+
+      $this->view('admins/index', $data);
     }
   }
 
@@ -186,20 +234,19 @@ class Books extends Controller
       // Make sure there is no error
       $noError = empty($data['isbn_err']) && empty($data['title_err']) && empty($data['type_err']) && empty($data['category_err']) && empty($data['edition_err']) && empty($data['rack_err']) && empty($data['author_err']);
 
-      
-        $err_msg = '<ul>';
-        $err_msg .= $data['isbn_err'] ?  '<li>' . $data['isbn_err'] . '</li>' : '';
-        $err_msg .= $data['title_err'] ?  '<li>' . $data['title_err'] . '</li>' : '';
-        $err_msg .= $data['type_err'] ?  '<li>' . $data['type_err'] . '</li>' : '';
-        $err_msg .= $data['category_err'] ?  '<li>' . $data['category_err'] . '</li>' : '';
-        $err_msg .= $data['edition_err'] ?  '<li>' . $data['edition_err'] . '</li>' : '';
-        $err_msg .= $data['rack_err'] ?  '<li>' . $data['rack_err'] . '</li>' : '';
-        $err_msg .= $data['author_err'] ?  '<li>' . $data['author_err'] . '</li>' : '';
-        $err_msg .= '</ul>';
 
-        return [$noError, $err_msg, $data];
+      $err_msg = '<ul>';
+      $err_msg .= $data['isbn_err'] ?  '<li>' . $data['isbn_err'] . '</li>' : '';
+      $err_msg .= $data['title_err'] ?  '<li>' . $data['title_err'] . '</li>' : '';
+      $err_msg .= $data['type_err'] ?  '<li>' . $data['type_err'] . '</li>' : '';
+      $err_msg .= $data['category_err'] ?  '<li>' . $data['category_err'] . '</li>' : '';
+      $err_msg .= $data['edition_err'] ?  '<li>' . $data['edition_err'] . '</li>' : '';
+      $err_msg .= $data['rack_err'] ?  '<li>' . $data['rack_err'] . '</li>' : '';
+      $err_msg .= $data['author_err'] ?  '<li>' . $data['author_err'] . '</li>' : '';
+      $err_msg .= '</ul>';
 
-      
-    } else {}
+      return [$noError, $err_msg, $data];
+    } else {
+    }
   }
 }

@@ -47,7 +47,7 @@
         </div>
       </div>
 
-      <button type="submit" class="btn btn-outline-primary">Add now</button>
+      <button type="submit" class="btn btn-outline-primary"><?=isset($data['add_book']) ? 'Add' : 'Update'?> now</button>
     </form>
   </div>
 </div>

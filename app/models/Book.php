@@ -10,17 +10,17 @@ class Book
     $this->db = new Database;
   }
 
-  public function findBooks($query = '', $available = null)
+  public function findBooks($query = '', $filterby = null, $orderby = 'ISBN')
   {
     /*
       * $available === null : Get all books
       * $available === true : Get only available books
       * $available === false : Get only out of stock books
       */
-    if ($available === true) {
+    if ($filterby === 'available') {
       $sql = "SELECT * , 'Available' AS 'Status' 
           FROM availablebooks";
-    } elseif ($available === false) {
+    } elseif ($filterby === 'outofstock') {
       $sql = "SELECT * , 'Out of stock' AS 'Status' 
           FROM outofstockbooks";
     } else {
@@ -29,7 +29,10 @@ class Book
 
     // Get books which match this search query
     $sql .= " WHERE (Title LIKE :query or Category LIKE :query or Author LIKE :query or Type LIKE :query)";
-
+    if ($orderby === 'ISBN' || $orderby === 'Title') {
+      $sql .= " ORDER BY " . $orderby;
+    }
+    
     $this->db->query($sql);
     $this->db->bind(':query', '%' . $query . '%');
 
@@ -92,6 +95,16 @@ class Book
     $this->db->bind(':Edition', $edition);
     $this->db->bind(':Rack', $rack);
     $this->db->bind(':Author', $author);
+    return $this->db->execute();
+  }
+  public function addcopy($isbn, $inv)
+  {
+
+    $sql = 'INSERT INTO bookcopy
+     VALUES (:Inv, :ISBN)';
+    $this->db->query($sql);
+    $this->db->bind(':Inv', $inv);
+    $this->db->bind(':ISBN', $isbn);
     return $this->db->execute();
   }
   public function edit($current_isbn, $isbn, $title, $type, $category, $edition, $rack, $author)
