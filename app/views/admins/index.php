@@ -116,34 +116,28 @@
       </a>
       </li> -->
           <li class="nav-item">
-            <a href="#" class="nav-link nav-link-custom link-dark active">
+            <a href="#" class="nav-link nav-link-custom link-dark ">
               Dashboard
             </a>
           </li>
           <li class="nav-item">
-            <a href="<?= URLROOT ?>/reservations" class="nav-link nav-link-custom link-dark">
+            <a href="<?= URLROOT ?>/reservations" class="nav-link nav-link-custom link-dark <?= isset($data['reservations']) ? 'active' : '' ?>">
               Reservations <span class="badge bg-secondary rounded-pill"><?= Statistics::reservationsCount() ?></span>
             </a>
           </li>
-          <!-- <li class="nav-item">
-            <a href="<?= URLROOT ?>/borrowings" class="nav-link nav-link-custom link-dark">
-              Borrowings <span class="badge bg-secondary rounded-pill"><?= Statistics::NotReturnedBorrowingsCount() ?></span>
-            </a>
-          </li> -->
           <li class="mb-1">
-
-            <a class="btn btn-toggle align-items-center rounded nav-link nav-link-custom link-dark collapsed" data-bs-toggle="collapse" data-bs-target="#borrowings-collapse" aria-expanded="false">
+            <a class="btn btn-toggle align-items-center rounded nav-link nav-link-custom link-dark collapsed <?= isset($data['borrowings']) || isset($data['add_borrowing']) ? 'active' : '' ?>" data-bs-toggle="collapse" data-bs-target="#borrowings-collapse" aria-expanded="<?= isset($data['borrowings']) || isset($data['add_borrowing']) ? 'true' : 'false' ?>">
               Borrowings
             </a>
-            <div class="collapse" id="borrowings-collapse">
+            <div class="collapse <?= isset($data['borrowings']) || isset($data['add_borrowing']) ? 'show' : '' ?>" id="borrowings-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="<?= URLROOT ?>/borrowings/add" class="link-dark rounded">Add new</a></li>
+                <li><a href="<?= URLROOT ?>/borrowings/add" class="link-dark rounded border-info <?= isset($data['add_borrowing']) ? 'border-start' : '' ?>">Add new</a></li>
                 <li>
-                <a href="<?= URLROOT ?>/borrowings" class="link-dark rounded">
-                  Not returned&nbsp;&nbsp; <span class="badge bg-secondary rounded-pill"><?= Statistics::NotReturnedBorrowingsCount() ?></span>
-                </a>
+                  <a href="<?= URLROOT ?>/borrowings" class="link-dark rounded border-info <?= isset($data['borrowings']) && $data['status'] === 'not returned' ? 'border-start' : '' ?>">
+                    Not returned&nbsp;&nbsp; <span class="badge bg-secondary rounded-pill"><?= Statistics::NotReturnedBorrowingsCount() ?></span>
+                  </a>
                 </li>
-                <li><a href="<?= URLROOT ?>/borrowings/archive" class="link-dark rounded">Archive (Returned)</a></li>
+                <li><a href="<?= URLROOT ?>/borrowings/archive" class="link-dark rounded border-info <?= isset($data['borrowings']) && $data['status'] === 'returned' ? 'border-start' : '' ?>">Archive (Returned)</a></li>
 
               </ul>
             </div>
@@ -151,26 +145,26 @@
 
           <li class="mb-1">
 
-            <a class="btn btn-toggle align-items-center rounded nav-link nav-link-custom link-dark collapsed" data-bs-toggle="collapse" data-bs-target="#books-collapse" aria-expanded="false">
+            <a class="btn btn-toggle align-items-center rounded nav-link nav-link-custom link-dark collapsed <?= isset($data['books']) || isset($data['add_book']) || isset($data['edit_book']) || isset($data['add_book_copy']) ? 'active' : '' ?>" data-bs-toggle="collapse" data-bs-target="#books-collapse" aria-expanded="<?= isset($data['books']) || isset($data['add_book']) ||  isset($data['edit_book']) || isset($data['add_book_copy']) ? 'true' : 'false' ?>">
               Books&nbsp;&nbsp; <span title="Out of stock" class="badge bg-secondary rounded-pill"><?= Statistics::OutOfStockBooksCount() ?></span>
             </a>
-            <div class="collapse" id="books-collapse">
+            <div class="collapse <?= isset($data['books']) || isset($data['add_book']) || isset($data['edit_book']) || isset($data['add_book_copy']) ? 'show' : '' ?>" id="books-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="<?= URLROOT ?>/books/add" class="link-dark rounded">Add new</a></li>
+                <li><a href="<?= URLROOT ?>/books/add" class="link-dark rounded border-info <?= isset($data['add_book']) ? 'border-start' : '' ?>">Add new</a></li>
                 <li>
-                <a href="<?= URLROOT ?>/books" class="link-dark rounded">
-                  All books
-                </a>
+                  <a href="<?= URLROOT ?>/books" class="link-dark rounded border-info <?= isset($data['books']) || isset($data['edit_book']) || isset($data['add_book_copy']) ? 'border-start' : '' ?>">
+                    All books
+                  </a>
                 </li>
-                
+
 
               </ul>
             </div>
           </li>
 
-         
+
           <li class="nav-item">
-            <a href="#" class="nav-link nav-link-custom link-dark">
+            <a href="<?= URLROOT ?>/borrowers" class="nav-link nav-link-custom link-dark">
               Borrowers
             </a>
           </li>
@@ -207,6 +201,8 @@
         <?php require_once APPROOT . '/views/admins/inc/books/books.inc.php' ?>
       <?php elseif (isset($data['add_book']) || isset($data['edit_book'])) : ?>
         <?php require_once APPROOT . '/views/admins/inc/books/addbook.inc.php' ?>
+      <?php elseif (isset($data['add_book_copy']) || isset($data['edit_book'])) : ?>
+        <?php require_once APPROOT . '/views/admins/inc/books/addcopy.inc.php' ?>
       <?php else : ?>
         <h6>Demo for sidebar nav menu links. <br> Based on Bootstrap 5 CSS framework. </h6>
         <p>For this demo page you should connect to the internet to receive files from CDN like Bootstrap5 CSS, Bootstrap5 JS</p>
