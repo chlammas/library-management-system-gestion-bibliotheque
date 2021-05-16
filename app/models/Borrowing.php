@@ -11,7 +11,7 @@ class Borrowing
 
   public function findBorrowingByUserCode($barcode, Bool $returned = null)
   {
-    $sql = 'SELECT bg.Id, bc.ISBN, Title, Category, Author, bg.Inv, BorrowingDate, DueDate 
+    $sql = 'SELECT bg.Id, bc.ISBN, Title, Category, Author, bg.Inv, BorrowingDate, DueDate, ReturnedDate, IsReturned
     FROM borrower br
     INNER JOIN borrowing bg ON br.Barcode = bg.BorrowerBarcode
     INNER JOIN bookcopy bc ON bg.Inv = bc.INV
@@ -26,7 +26,11 @@ class Borrowing
 
     $this->db->query($sql);
     $this->db->bind(':Barcode', $barcode);
-    return $this->db->single();
+    if (is_null($returned)) {
+      return $this->db->resultSet();
+    } else {
+      return $this->db->single();
+    }
   }
 
   public function getBorrowings(Bool $returned = null, $query = '', $orderby = 'BorrowingDate', Bool $delayed = false, Bool $desc = false)

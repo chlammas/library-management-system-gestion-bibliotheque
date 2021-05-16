@@ -150,10 +150,16 @@ class Borrowers extends Controller
     }
     $data = [
       'borrower' => '',
+      'borrower_borrowings' => '',
+      'borrower_sanctions' => '',
     ];
     $borrower = $this->borrowerModel->findBorrowerByBarCode($barcode);
+    $borrowings = $this->borrowingModel->findBorrowingByUserCode($barcode);
+    $sanctions = $this->sanctionModel->findSanctionsByUserCode($barcode, false);
     if ($borrower) {
       $data['borrower'] = $borrower;
+      $data['borrower_borrowings'] = $borrowings;
+      $data['borrower_sanctions'] = $sanctions;
       $this->view('admins/index', $data);
     } else {
       redirect('borrowers');

@@ -13,7 +13,7 @@ class Sanction
   public function findSanctionsByUserCode($barcode, $applied=true)
   {
     // Get All user sanctions
-    $sql = "SELECT BorrowerBarcode, Firstname, Lastname, EndDate, DATEDIFF(EndDate, CURRENT_DATE) as Remaining, Note  FROM sanction INNER JOIN borrower ON Barcode = BorrowerBarcode WHERE BorrowerBarcode = :Barcode";
+    $sql = "SELECT Id, BorrowerBarcode, Firstname, Lastname, EndDate, DATEDIFF(EndDate, CURRENT_DATE) as Remaining, Note  FROM sanction INNER JOIN borrower ON Barcode = BorrowerBarcode WHERE BorrowerBarcode = :Barcode";
 
     // Get just still applied sanction
     if ($applied) {
