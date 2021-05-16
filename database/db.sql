@@ -116,6 +116,18 @@ CREATE VIEW allbooks AS
 SELECT * FROM outofstockbooks 
 UNION 
 SELECT * FROM availablebooks;
+
+CREATE VIEW blockedborrowers as 
+SELECT Barcode, CIN, Firstname, Lastname, Program, 'Blocked' as 'Status', COUNT(bg.BorrowerBarcode) AS 'Borrowings',  COUNT(s.BorrowerBarcode) AS 'Sanctions'  FROM borrowing bg RIGHT JOIN borrower b ON bg.BorrowerBarcode = b.Barcode  LEFT JOIN sanction s on s.BorrowerBarcode = b.Barcode WHERE Barcode IN (SELECT BorrowerBarcode FROM `sanction` WHERE EndDate > CURRENT_DATE)  GROUP BY (Barcode);
+
+CREATE VIEW Activeborrowers AS
+SELECT Barcode, CIN, Firstname, Lastname, Program, 'Active' as 'Status', COUNT(bg.BorrowerBarcode) AS 'Borrowings',  COUNT(s.BorrowerBarcode) AS 'Sanctions'  FROM borrowing bg RIGHT JOIN borrower b ON bg.BorrowerBarcode = b.Barcode  LEFT JOIN sanction s on s.BorrowerBarcode = b.Barcode WHERE Barcode NOT IN (SELECT Barcode FROM  blockedborrowers)  GROUP BY (Barcode);
+
+CREATE VIEW allborrowers as
+SELECT * FROM blockedborrowers
+UNION
+SELECT * FROM Activeborrowers ;
+
 -- Insert test
 INSERT INTO `administrator` (`Barcode`, `Firstname`, `Lastname`) VALUES
 ('446541749', 'Ahmadi', 'Jamal'),
