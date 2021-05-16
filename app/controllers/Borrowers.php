@@ -19,7 +19,9 @@ class Borrowers extends Controller
 
   public function index()
   {
-    if (!isBorrowerLoggedIn()) {
+    if (isAdminLoggedIn()) {
+      redirect('borrowers/all');
+    } elseif (!isBorrowerLoggedIn()) {
       redirect('');
     }
     $sanctions = $this->sanctionModel->findSanctionsByUserCode($_SESSION['borrower_barcode']);
@@ -125,5 +127,36 @@ class Borrowers extends Controller
   public function logout()
   {
     userLogout();
+  }
+
+  public function all()
+  {
+    $data = [
+      'borrowers' => '',
+      'query' => isset($_GET['query']) ? trim($_GET['query']) : '',
+      'filterby' => isset($_GET['filterby']) ? trim($_GET['filterby']) : '',
+      'orderby' => isset($_GET['orderby']) ? trim($_GET['orderby']) : 'Barcode',
+    ];
+
+    $borrowers = $this->borrowerModel->findBorrowers($data['query'], $data['filterby'], $data['orderby']);
+    $data['borrowers'] = $borrowers;
+    $this->view('admins/index', $data);
+  }
+
+  public function detail($barcode = null)
+  {
+    if (is_null($barcode)) {
+      redirect('borrowers');
+    }
+    $data = [
+      'borrower' => '',
+    ];
+    $borrower = $this->borrowerModel->findBorrowerByBarCode($barcode);
+    if ($borrower) {
+      $data['borrower'] = $borrower;
+      $this->view('admins/index', $data);
+    } else {
+      redirect('borrowers');
+    }
   }
 }

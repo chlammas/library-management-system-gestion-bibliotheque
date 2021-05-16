@@ -203,6 +203,8 @@
         <?php require_once APPROOT . '/views/admins/inc/books/addbook.inc.php' ?>
       <?php elseif (isset($data['add_book_copy']) || isset($data['edit_book'])) : ?>
         <?php require_once APPROOT . '/views/admins/inc/books/addcopy.inc.php' ?>
+      <?php elseif (isset($data['borrowers'])) : ?>
+        <?php require_once APPROOT . '/views/admins/inc/borrowers/borrowers.inc.php' ?>
       <?php else : ?>
         <h6>Demo for sidebar nav menu links. <br> Based on Bootstrap 5 CSS framework. </h6>
         <p>For this demo page you should connect to the internet to receive files from CDN like Bootstrap5 CSS, Bootstrap5 JS</p>
