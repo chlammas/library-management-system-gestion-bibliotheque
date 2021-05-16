@@ -12,11 +12,7 @@ class Book
 
   public function findBooks($query = '', $filterby = null, $orderby = 'ISBN')
   {
-    /*
-      * $available === null : Get all books
-      * $available === true : Get only available books
-      * $available === false : Get only out of stock books
-      */
+    
     if ($filterby === 'available') {
       $sql = "SELECT * , 'Available' AS 'Status' 
           FROM availablebooks";
