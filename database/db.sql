@@ -128,6 +128,11 @@ SELECT * FROM blockedborrowers
 UNION
 SELECT * FROM Activeborrowers ;
 
+-- -- statistics
+CREATE VIEW mostborrowedbooks AS SELECT ab.ISBN, Title, Type, Category, Edition, Rack, Author, Status, COUNT(b.Id) as 'Borrowings' FROM allbooks ab JOIN bookcopy bc ON ab.ISBN = bc.ISBN LEFT JOIN borrowing b ON bc.Inv = b.Inv GROUP BY (ab.ISBN) ORDER BY Borrowings DESC;
+
+CREATE VIEW borrowingsnumber AS SELECT BorrowingDate, COUNT(*) AS 'Number' FROM borrowing GROUP BY BorrowingDate ORDER BY BorrowingDate DESC;
+
 -- Insert test
 INSERT INTO `administrator` (`Barcode`, `Firstname`, `Lastname`) VALUES
 ('446541749', 'Ahmadi', 'Jamal'),
