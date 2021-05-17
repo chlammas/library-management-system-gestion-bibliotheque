@@ -12,7 +12,7 @@ class Book
 
   public function findBooks($query = '', $filterby = null, $orderby = 'ISBN')
   {
-    
+
     if ($filterby === 'available') {
       $sql = "SELECT * , 'Available' AS 'Status' 
           FROM availablebooks";
@@ -28,7 +28,7 @@ class Book
     if ($orderby === 'ISBN' || $orderby === 'Title') {
       $sql .= " ORDER BY " . $orderby;
     }
-    
+
     $this->db->query($sql);
     $this->db->bind(':query', '%' . $query . '%');
 
@@ -119,5 +119,19 @@ class Book
     $this->db->bind(':Rack', $rack);
     $this->db->bind(':Author', $author);
     return $this->db->execute();
+  }
+
+  /* statistics */
+  public function BorrowedBooks($limit = 10, $order = 'asc')
+  {
+    if ($order === 'desc')
+      $sql = "SELECT * FROM mostborrowedbooks";
+    else
+      $sql = "SELECT * FROM leastborrowedbooks";
+
+    if (is_integer($limit))
+      $sql .= ' LIMIT ' . $limit;
+    $this->db->query($sql);
+    return $this->db->resultSet();
   }
 }

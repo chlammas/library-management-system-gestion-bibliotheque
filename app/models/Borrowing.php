@@ -81,4 +81,12 @@ class Borrowing
     $this->db->bind(':Id', $id);
     return $this->db->execute();
   }
+
+  /* statistics */
+  public function borrowingsNumber()
+  {
+    $sql = "SELECT * FROM borrowingsnumber";
+    $this->db->query($sql);
+    return $this->db->resultSet();
+  }
 }

@@ -7,10 +7,10 @@ class Pages extends Controller
   {
   }
 
-  public function index($type = 'borrower')
+  public function index($type = '')
   {
     if (isAdminLoggedIn()) {
-      redirect('admins');
+      redirect('admins/dashboard');
     }
     if (isBorrowerLoggedIn()) {
       redirect('borrowers');

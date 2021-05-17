@@ -116,15 +116,19 @@
       </a>
       </li> -->
           <li class="nav-item">
-            <a href="#" class="nav-link nav-link-custom link-dark ">
+            <a href="<?=URLROOT?>/admins/dashboard" class="nav-link nav-link-custom link-dark <?= strpos($_SERVER['REQUEST_URI'], 'dashboard') !== false ? 'active' : '' ?>">
               Dashboard
             </a>
           </li>
+        <hr>
+
           <li class="nav-item">
             <a href="<?= URLROOT ?>/reservations" class="nav-link nav-link-custom link-dark <?= isset($data['reservations']) ? 'active' : '' ?>">
               Reservations <span class="badge bg-secondary rounded-pill"><?= Statistics::reservationsCount() ?></span>
             </a>
           </li>
+          <hr>
+
           <li class="mb-1">
             <a class="btn btn-toggle align-items-center rounded nav-link nav-link-custom link-dark collapsed <?= isset($data['borrowings']) || isset($data['add_borrowing']) ? 'active' : '' ?>" data-bs-toggle="collapse" data-bs-target="#borrowings-collapse" aria-expanded="<?= isset($data['borrowings']) || isset($data['add_borrowing']) ? 'true' : 'false' ?>">
               Borrowings
@@ -142,6 +146,7 @@
               </ul>
             </div>
           </li>
+          <hr>
 
           <li class="mb-1">
 
@@ -162,9 +167,10 @@
             </div>
           </li>
 
+          <hr>
 
           <li class="nav-item">
-            <a href="<?= URLROOT ?>/borrowers" class="nav-link nav-link-custom link-dark">
+            <a href="<?= URLROOT ?>/borrowers" class="nav-link nav-link-custom link-dark <?= isset($data['borrowers']) || isset($data['borrower']) ? 'active' : '' ?>">
               Borrowers
             </a>
           </li>
@@ -208,21 +214,9 @@
       <?php elseif (isset($data['borrower'])) : ?>
         <?php require_once APPROOT . '/views/admins/inc/borrowers/borrowerdetail.inc.php' ?>
       <?php else : ?>
-        <h6>Demo for sidebar nav menu links. <br> Based on Bootstrap 5 CSS framework. </h6>
-        <p>For this demo page you should connect to the internet to receive files from CDN like Bootstrap5 CSS, Bootstrap5 JS</p>
-
-        <p class="text-muted"> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-          consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-          cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-          proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-          consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-          cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-          proident, sunt in culpa qui officia deserunt mollit anim id est laborum. </p>
-
+        <h6></h6>
+        <p></p>
+        <?php require_once APPROOT . '/views/admins/inc/dashboard/dashboard.inc.php' ?>
       <?php endif ?>
     </main>
   </div>
