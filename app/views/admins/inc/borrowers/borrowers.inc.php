@@ -1,17 +1,17 @@
 <div class="card text-center card-borrower">
   <div class="card-header">
-    Search for a borrower :
+    <?= $language['borrower_header'] ?>
   </div>
   <div class="card-body">
     <form method="POST" class="search-form row g-3 justify-content-center">
       <div class="col-auto">
-        <label>Filter by:</label>
+        <label><?= $language['filter_by'] ?> :</label>
       </div>
       <div class="col-auto">
         <div class="form-check">
           <input class="form-check-input" type="radio" name="filterby" id="allborrowers" checked>
           <label class="form-check-label small text-muted" for="allborrowers">
-            All borrowers
+          <?= $language['all_borrowers'] ?>
           </label>
         </div>
       </div>
@@ -19,7 +19,7 @@
         <div class="form-check">
           <input class="form-check-input" type="radio" name="filterby" id="active">
           <label class="form-check-label small text-muted" for="active">
-            Active borrowers
+          <?= $language['active_borrowers'] ?>
           </label>
         </div>
       </div>
@@ -28,18 +28,18 @@
           <input class="form-check-input" type="radio" name="filterby" id="blocked">
 
           <label class="form-check-label small text-muted" for="blocked">
-            Blocked borrowers
+          <?= $language['blocked_borrowers'] ?>
           </label>
         </div>
       </div>
       <div class="col-auto">
-        <label>Order by:</label>
+        <label><?= $language['order_by'] ?> :</label>
       </div>
       <div class="col-auto">
         <div class="form-check">
           <input class="form-check-input" type="radio" name="orderby" id="Barcode" checked>
           <label class="form-check-label small text-muted" for="Barcode">
-            Barcode
+          <?= $language['table_barcode'] ?>
           </label>
         </div>
       </div>
@@ -47,7 +47,7 @@
         <div class="form-check">
           <input class="form-check-input" type="radio" name="orderby" id="CIN" checked>
           <label class="form-check-label small text-muted" for="CIN">
-            CIN
+          <?= $language['table_cin'] ?>
           </label>
         </div>
       </div>
@@ -55,7 +55,7 @@
         <div class="form-check">
           <input class="form-check-input" type="radio" name="orderby" id="Firstname" checked>
           <label class="form-check-label small text-muted" for="Firstname">
-            Firstname
+          <?= $language['table_firstname'] ?>
           </label>
         </div>
       </div>
@@ -64,13 +64,13 @@
           <input class="form-check-input" type="radio" name="orderby" id="Lastname">
 
           <label class="form-check-label small text-muted" for="Lastname">
-            Lastname
+          <?= $language['table_lastname'] ?>
           </label>
         </div>
       </div>
       <hr>
       <div class="col-auto">
-        <input type="text" name="query" class="form-control" placeholder="Type here to search...">
+        <input type="text" name="query" class="form-control" placeholder="<?= $language['search_placeholder'] ?>">
       </div>
       <!-- <div class="col-auto">
         <button type="submit" class="btn btn-outline-primary btn-search mb-3">Search now</button>
@@ -83,15 +83,15 @@
         <?php if (!empty($data['borrowers'])) : ?>
           <thead class="table-light">
             <tr>
-              <th scope="col">Barcode</th>
-              <th scope="col">CIN</th>
-              <th scope="col">Firstname</th>
-              <th scope="col">Lastname</th>
-              <th scope="col">Program</th>
-              <th scope="col">Status</th>
-              <th scope="col">Borrowings</th>
-              <th scope="col">Sanctions</th>
-              <th scope="col">Details</th>
+              <th scope="col"><?= $language['table_barcode'] ?></th>
+              <th scope="col"><?= $language['table_cin'] ?></th>
+              <th scope="col"><?= $language['table_firstname'] ?></th>
+              <th scope="col"><?= $language['table_lastname'] ?></th>
+              <th scope="col"><?= $language['table_program'] ?></th>
+              <th scope="col"><?= $language['table_status'] ?></th>
+              <th scope="col"><?= $language['table_borrowings'] ?></th>
+              <th scope="col"><?= $language['table_sanctions'] ?></th>
+              <th scope="col"><?= $language['table_details'] ?></th>
             </tr>
           </thead>
           <tbody>
@@ -107,7 +107,7 @@
                 <td><?= $borrower->Sanctions ?></td>
                 <td>
                   <div class="btn-group" role="group" aria-label="Basic example">
-                    <a href="<?= URLROOT ?>/borrowers/detail/<?= $borrower->Barcode ?>" title="See more details" class="btn btn-outline-primary btn-search ">More...<i class="fas fa-angle-double-right"></i></a>
+                    <a href="<?= URLROOT ?>/borrowers/detail/<?= $borrower->Barcode ?>" title="See more details" class="btn btn-outline-primary btn-search "><?= $language['more'] ?>...<i class="fas fa-angle-double-right"></i></a>
                   </div>
                 </td>
 
@@ -131,22 +131,22 @@
   const queryBox = document.querySelector('.search-form input[name="query"]');
   const orderbyInputs = document.querySelectorAll('input[name="orderby"]');
   const filterbyInputs = document.querySelectorAll('input[name="filterby"]');
-    let url = "<?= URLROOT ?>" + '/borrowers/all';
-    queryBox.addEventListener('keyup', function(event) {
+  let url = "<?= URLROOT ?>" + '/borrowers/all';
+  queryBox.addEventListener('keyup', function(event) {
+    makeRequest(url, ...getCurrentValues());
+  });
+  filterbyInputs.forEach(input => {
+    input.addEventListener('change', function(event) {
       makeRequest(url, ...getCurrentValues());
     });
-    filterbyInputs.forEach(input => {
-      input.addEventListener('change', function(event) {
-        makeRequest(url, ...getCurrentValues());
-      });
-    })
-    orderbyInputs.forEach(input => {
-      input.addEventListener('change', function(event) {
-        console.log(getCurrentValues())
-        makeRequest(url, ...getCurrentValues());
-      });
-    })
-  
+  })
+  orderbyInputs.forEach(input => {
+    input.addEventListener('change', function(event) {
+      console.log(getCurrentValues())
+      makeRequest(url, ...getCurrentValues());
+    });
+  })
+
   function getCurrentValues() {
     const orderby = document.querySelector('input[name="orderby"]:checked');
     const filterby = document.querySelector('input[name="filterby"]:checked');

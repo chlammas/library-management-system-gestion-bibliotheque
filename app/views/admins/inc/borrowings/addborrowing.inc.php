@@ -18,10 +18,10 @@
       <h5 class="card-title"></h5>
       <form class="row g-3 search-form" method="POST" action="<?= URLROOT ?>/borrowers/findBorrowerByBarCode">
         <div class="col-auto">
-          <input type="text" name="code" class="form-control-plaintext col-sm-6" placeholder="Borrower barcode...">
+          <input type="text" name="code" class="form-control-plaintext col-sm-6" placeholder="<?= $language['borrowings_code_placeholder'] ?>">
         </div>
         <div class="col-auto">
-          <button type="submit" class="btn btn-outline-primary mb-3">Add</button>
+          <button type="submit" class="btn btn-outline-primary mb-3"><?= $language['btn_add'] ?></button>
         </div>
       </form>
     </div>
@@ -52,8 +52,10 @@
           <input type="hidden" name="inv">
         </div>
         <div class="col-auto">
-          <label for="">To complete this operation, please click here : </label>
-          <button type="submit" class="btn btn-outline-success">Confirm</button>
+          <label>
+          <?= $language['borrowings_confirm_msg'] ?>
+          </label>
+          <button type="submit" class="btn btn-outline-success"><?= $language['btn_confirm'] ?></button>
         </div>
       </form>
     </div>

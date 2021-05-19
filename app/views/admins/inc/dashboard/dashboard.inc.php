@@ -12,20 +12,20 @@
     <div class="col-sm-12 mb-3">
       <div class="card h-100">
         <div class="card-body">
-          <h6 class="d-flex align-items-center mb-3">Most Borrowed Books</h6>
+          <h6 class="d-flex align-items-center mb-3"><?= $language['dashboard_most_borrowed_books'] ?></h6>
           <div class="table-responsive">
             <table class="table table-borrowings">
               <thead class="table-light">
                 <tr>
-                  <th scope="col">ISBN</th>
-                  <th scope="col">Title</th>
-                  <th scope="col">Type</th>
-                  <th scope="col">Category</th>
-                  <th scope="col">Edition</th>
-                  <th scope="col">Rack</th>
-                  <th scope="col">Author</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Borrowings</th>
+                  <th scope="col"><?= $language['table_isbn'] ?></th>
+                  <th scope="col"><?= $language['table_title'] ?></th>
+                  <th scope="col"><?= $language['table_type'] ?></th>
+                  <th scope="col"><?= $language['table_category'] ?></th>
+                  <th scope="col"><?= $language['table_edition'] ?></th>
+                  <th scope="col"><?= $language['table_edition'] ?></th>
+                  <th scope="col"><?= $language['table_author'] ?></th>
+                  <th scope="col"><?= $language['table_status'] ?></th>
+                  <th scope="col"><?= $language['table_borrowings'] ?></th>
                 </tr>
               </thead>
               <tbody>
@@ -53,21 +53,21 @@
     <div class="col-sm-12 mb-3">
       <div class="card h-100">
         <div class="card-body">
-          <h6 class="d-flex align-items-center mb-3">Delayed Borrowings</h6>
+          <h6 class="d-flex align-items-center mb-3"><?= $language['delayed_borrowings'] ?></h6>
           <div class="table-responsive">
             <table class="table table-borrowings">
               <thead class="table-light">
                 <tr>
-                  <th class="col hidden">Id</th>
-                  <th scope="col">CIN</th>
-                  <th scope="col">Firstname</th>
-                  <th scope="col">Lastname</th>
-                  <th scope="col">Title</th>
-                  <th scope="col">Category</th>
-                  <th scope="col">Author</th>
-                  <th scope="col">Inv</th>
-                  <th scope="col">BorrowingDate</th>
-                  <th scope="col">DueDate</th>
+                  <th class="col hidden"><?= $language['table_id'] ?></th>
+                  <th scope="col"><?= $language['table_cin'] ?></th>
+                  <th scope="col"><?= $language['table_firstname'] ?></th>
+                  <th scope="col"><?= $language['table_lastname'] ?></th>
+                  <th scope="col"><?= $language['table_title'] ?></th>
+                  <th scope="col"><?= $language['table_category'] ?></th>
+                  <th scope="col"><?= $language['table_author'] ?></th>
+                  <th scope="col"><?= $language['table_inv'] ?></th>
+                  <th scope="col"><?= $language['table_borrowing_date'] ?></th>
+                  <th scope="col"><?= $language['table_due_date'] ?></th>
 
                 </tr>
               </thead>
@@ -113,7 +113,7 @@
             echo $borrowing->Number . ",";
           } ?>
         ],
-        label: "Borrowings number",
+        label: "<?= $language['dashboard_chart_label'] ?>",
         borderColor: "#948e95",
       }]
     },
@@ -121,8 +121,13 @@
       plugins: {
         title: {
           display: true,
-          text: 'Borrowings Number Per Date'
+          text: "<?= $language['dashboard_chart_title'] ?>"
         },
+      },
+      scales: {
+        y: {
+          beginAtZero: true
+        }
       }
     }
   });

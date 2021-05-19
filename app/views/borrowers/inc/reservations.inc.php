@@ -1,21 +1,21 @@
 <div class="card text-center card-borrower">
     <div class="card-header">
-      Reserved books :
+    <?= $language['reservation_header'] ?>
     </div>
     <div class="card-body">
       <span class="card-title"><strong>*</strong></span>
-      <span class="card-text">You can not make more than one reservation at the same time</span>
+      <span class="card-text"><?= $language['reservation_msg'] ?></span>
     </div>
     <div class="table-responsive">
       <table class="table table-books ">
         <thead class="table-light">
           <tr>
-            <th scope="col">ISBN</th>
-            <th scope="col">Title</th>
-            <th scope="col">Category</th>
-            <th scope="col">Author</th>
-            <th scope="col">Date</th>
-            <th scope="col">Action</th>
+            <th scope="col"><?= $language['table_isbn'] ?></th>
+            <th scope="col"><?= $language['table_title'] ?></th>
+            <th scope="col"><?= $language['table_category'] ?></th>
+            <th scope="col"><?= $language['table_author'] ?></th>
+            <th scope="col"><?= $language['table_date'] ?></th>
+            <th scope="col"><?= $language['table_action'] ?></th>
           </tr>
         </thead>
         <tbody>
@@ -25,7 +25,7 @@
             <td><?= $data['reservation']->Category ?></td>
             <td><?= $data['reservation']->Author ?></td>
             <td><?= $data['reservation']->Date ?></td>
-            <td><a href="<?php echo URLROOT ?>/reservations/cancel/<?php echo $_SESSION['borrower_barcode'] ?>">Cancel</a></td>
+            <td><a href="<?php echo URLROOT ?>/reservations/cancel/<?php echo $_SESSION['borrower_barcode'] ?>"><?= $language['btn_cancel'] ?></a></td>
           </tr>
 
         </tbody>

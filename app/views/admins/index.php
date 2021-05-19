@@ -116,32 +116,32 @@
       </a>
       </li> -->
           <li class="nav-item">
-            <a href="<?=URLROOT?>/admins/dashboard" class="nav-link nav-link-custom link-dark <?= strpos($_SERVER['REQUEST_URI'], 'dashboard') !== false ? 'active' : '' ?>">
-              Dashboard
+            <a href="<?= URLROOT ?>/admins/dashboard" class="nav-link nav-link-custom link-dark <?= strpos($_SERVER['REQUEST_URI'], 'dashboard') !== false ? 'active' : '' ?>">
+              <?= $language['nav_dashboard'] ?>
             </a>
           </li>
-        <hr>
+          <hr>
 
           <li class="nav-item">
             <a href="<?= URLROOT ?>/reservations" class="nav-link nav-link-custom link-dark <?= isset($data['reservations']) ? 'active' : '' ?>">
-              Reservations <span class="badge bg-secondary rounded-pill"><?= Statistics::reservationsCount() ?></span>
+              <?= $language['nav_reservations'] ?> <span class="badge bg-secondary rounded-pill"><?= Statistics::reservationsCount() ?></span>
             </a>
           </li>
           <hr>
 
           <li class="mb-1">
             <a class="btn btn-toggle align-items-center rounded nav-link nav-link-custom link-dark collapsed <?= isset($data['borrowings']) || isset($data['add_borrowing']) ? 'active' : '' ?>" data-bs-toggle="collapse" data-bs-target="#borrowings-collapse" aria-expanded="<?= isset($data['borrowings']) || isset($data['add_borrowing']) ? 'true' : 'false' ?>">
-              Borrowings
+              <?= $language['nav_borrowings'] ?>
             </a>
             <div class="collapse <?= isset($data['borrowings']) || isset($data['add_borrowing']) ? 'show' : '' ?>" id="borrowings-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="<?= URLROOT ?>/borrowings/add" class="link-dark rounded border-info <?= isset($data['add_borrowing']) ? 'border-start' : '' ?>">Add new</a></li>
+                <li><a href="<?= URLROOT ?>/borrowings/add" class="link-dark rounded border-info <?= isset($data['add_borrowing']) ? 'border-start' : '' ?>"><?= $language['nav_borrowings_add'] ?></a></li>
                 <li>
                   <a href="<?= URLROOT ?>/borrowings" class="link-dark rounded border-info <?= isset($data['borrowings']) && $data['status'] === 'not returned' ? 'border-start' : '' ?>">
-                    Not returned&nbsp;&nbsp; <span class="badge bg-secondary rounded-pill"><?= Statistics::NotReturnedBorrowingsCount() ?></span>
+                    <?= $language['nav_borrowings_not'] ?>&nbsp;&nbsp; <span class="badge bg-secondary rounded-pill"><?= Statistics::NotReturnedBorrowingsCount() ?></span>
                   </a>
                 </li>
-                <li><a href="<?= URLROOT ?>/borrowings/archive" class="link-dark rounded border-info <?= isset($data['borrowings']) && $data['status'] === 'returned' ? 'border-start' : '' ?>">Archive (Returned)</a></li>
+                <li><a href="<?= URLROOT ?>/borrowings/archive" class="link-dark rounded border-info <?= isset($data['borrowings']) && $data['status'] === 'returned' ? 'border-start' : '' ?>"><?= $language['nav_borrowings_archive'] ?></a></li>
 
               </ul>
             </div>
@@ -151,14 +151,14 @@
           <li class="mb-1">
 
             <a class="btn btn-toggle align-items-center rounded nav-link nav-link-custom link-dark collapsed <?= isset($data['books']) || isset($data['add_book']) || isset($data['edit_book']) || isset($data['add_book_copy']) ? 'active' : '' ?>" data-bs-toggle="collapse" data-bs-target="#books-collapse" aria-expanded="<?= isset($data['books']) || isset($data['add_book']) ||  isset($data['edit_book']) || isset($data['add_book_copy']) ? 'true' : 'false' ?>">
-              Books&nbsp;&nbsp; <span title="Out of stock" class="badge bg-secondary rounded-pill"><?= Statistics::OutOfStockBooksCount() ?></span>
+              <?= $language['nav_books'] ?>&nbsp;&nbsp; <span title="<?= $language['nav_books_notif_title'] ?>" class="badge bg-secondary rounded-pill"><?= Statistics::OutOfStockBooksCount() ?></span>
             </a>
             <div class="collapse <?= isset($data['books']) || isset($data['add_book']) || isset($data['edit_book']) || isset($data['add_book_copy']) ? 'show' : '' ?>" id="books-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="<?= URLROOT ?>/books/add" class="link-dark rounded border-info <?= isset($data['add_book']) ? 'border-start' : '' ?>">Add new</a></li>
+                <li><a href="<?= URLROOT ?>/books/add" class="link-dark rounded border-info <?= isset($data['add_book']) ? 'border-start' : '' ?>"><?= $language['nav_books_add'] ?></a></li>
                 <li>
                   <a href="<?= URLROOT ?>/books" class="link-dark rounded border-info <?= isset($data['books']) || isset($data['edit_book']) || isset($data['add_book_copy']) ? 'border-start' : '' ?>">
-                    All books
+                    <?= $language['nav_books_all'] ?>
                   </a>
                 </li>
 
@@ -171,7 +171,7 @@
 
           <li class="nav-item">
             <a href="<?= URLROOT ?>/borrowers" class="nav-link nav-link-custom link-dark <?= isset($data['borrowers']) || isset($data['borrower']) ? 'active' : '' ?>">
-              Borrowers
+              <?= $language['nav_borrowers'] ?>
             </a>
           </li>
         </ul>

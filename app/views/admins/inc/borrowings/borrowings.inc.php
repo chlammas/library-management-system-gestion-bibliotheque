@@ -24,36 +24,26 @@
     <form method="GET" class="search-form row g-3 justify-content-center">
       <?php if ($data['status'] === 'not returned') : ?>
         <div class="col-auto">
-          <label>Filter by:</label>
+          <label><?= $language['filter_by'] ?> :</label>
         </div>
         <div class="col-auto">
           <div class="form-check">
             <input class="form-check-input" type="checkbox" value="" id="DelayedBorrowings">
             <label class="form-check-label small text-muted" for="DelayedBorrowings">
-              Delayed Borrowings
+              <?= $language['delayed_borrowings'] ?>
             </label>
           </div>
         </div>
-      <?php else : ?>
-        <!-- <div class="col-auto">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="SanctionedBorrowers">
-            <label class="form-check-label small text-muted" for="SanctionedBorrowers">
-              Sanctioned Borrowers
-            </label>
-          </div>
-        </div> -->
-
       <?php endif ?>
       <div class="col-auto">
-        <label>Order by:</label>
+        <label><?= $language['order_by'] ?> :</label>
       </div>
       <?php if ($data['status'] === 'returned') : ?>
         <div class="col-auto">
           <div class="form-check">
             <input class="form-check-input" type="radio" name="orderby" id="ReturnedDate">
             <label class="form-check-label small text-muted" for="ReturnedDate">
-              Returned Date
+              <?= $language['table_returned_date'] ?>
             </label>
           </div>
         </div>
@@ -62,7 +52,7 @@
         <div class="form-check">
           <input class="form-check-input" type="radio" name="orderby" id="BorrowingDate" checked>
           <label class="form-check-label small text-muted" for="BorrowingDate">
-            Borrowing Date
+            <?= $language['table_borrowing_date'] ?>
           </label>
         </div>
       </div>
@@ -71,7 +61,7 @@
           <input class="form-check-input" type="radio" name="orderby" id="DueDate">
 
           <label class="form-check-label small text-muted" for="DueDate">
-            Due Date
+            <?= $language['table_due_date'] ?>
           </label>
         </div>
       </div>
@@ -79,13 +69,13 @@
         <div class="form-check">
           <input class="form-check-input" type="checkbox" value="" id="Desc">
           <label class="form-check-label small text-muted" for="Desc">
-            Desc
+            <?= $language['desc'] ?>
           </label>
         </div>
       </div>
       <hr>
       <div class="col-auto">
-        <input type="text" name="query" class="form-control" placeholder="Type here to search...">
+        <input type="text" name="query" class="form-control" placeholder="<?= $language['search_placeholder'] ?>">
       </div>
     </form>
     <hr>
@@ -94,20 +84,20 @@
         <?php if (!empty($data['borrowings'])) : ?>
           <thead class="table-light">
             <tr>
-              <th class="col hidden">Id</th>
-              <th scope="col">CIN</th>
-              <th scope="col">Firstname</th>
-              <th scope="col">Lastname</th>
-              <th scope="col">Title</th>
-              <th scope="col">Category</th>
-              <th scope="col">Author</th>
-              <th scope="col">Inv</th>
-              <th scope="col">BorrowingDate</th>
-              <th scope="col">DueDate</th>
+              <th class="col hidden"><?= $language['table_id'] ?></th>
+              <th scope="col"><?= $language['table_cin'] ?></th>
+              <th scope="col"><?= $language['table_firstname'] ?></th>
+              <th scope="col"><?= $language['table_lastname'] ?></th>
+              <th scope="col"><?= $language['table_title'] ?></th>
+              <th scope="col"><?= $language['table_category'] ?></th>
+              <th scope="col"><?= $language['table_author'] ?></th>
+              <th scope="col"><?= $language['table_inv'] ?></th>
+              <th scope="col"><?= $language['table_borrowing_date'] ?></th>
+              <th scope="col"><?= $language['table_due_date'] ?></th>
               <?php if ($data['status'] === 'returned') : ?>
-                <th scope="col">ReturnedDate</th>
+                <th scope="col"><?= $language['table_returned_date'] ?></th>
               <?php else : ?>
-                <th scope="col">Action</th>
+                <th scope="col"><?= $language['table_action'] ?></th>
               <?php endif ?>
             </tr>
           </thead>
@@ -156,24 +146,24 @@
                 <div class="form-check text-start">
                   <input class="form-check-input" type="checkbox" name="sanction">
                   <label class="form-check-label" for="flexCheckIndeterminate">
-                    Punish the borrower before completing the process?
+                    <?= $language['borrowings_punish_msg'] ?>
                   </label>
                 </div>
                 <div class="mb-3 text-start">
                   <input type="hidden" name="barcode" class="form-control">
                   <input type="hidden" name="idborrowing" class="form-control">
                   <div class="hidden-part hidden">
-                    <label class="form-label">End Date : *</label>
+                    <label class="form-label"><?= $language['table_end_date'] ?> : *</label>
                     <input type="date" name="enddate" class="form-control">
-                    <label class="form-label">Note :</label>
+                    <label class="form-label"><?= $language['table_note'] ?> :</label>
                     <textarea type="text" name="note" class="form-control" placeholder="..."></textarea>
 
                   </div>
                 </div>
               </div>
               <div class="modal-footer">
-                <a href="#" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</a>
-                <button type="submit" class="btn btn-outline-success">Returned</button>
+                <a href="#" class="btn btn-outline-secondary" data-bs-dismiss="modal"><?= $language['btn_close'] ?></a>
+                <button type="submit" class="btn btn-outline-success"><?= $language['btn_returned'] ?></button>
 
               </div>
 

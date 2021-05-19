@@ -16,7 +16,7 @@
   </style>
   <div class="card text-center card-reservation">
     <div class="card-header">
-      Reserved books :
+      <?= $language['reservations_header'] ?>
     </div>
     <?php if (!empty($data['reservations'])) : ?>
       <div class="card-body">
@@ -27,15 +27,15 @@
         <table class="table table-books ">
           <thead class="table-light">
             <tr>
-              <th scope="col">Firstname</th>
-              <th scope="col">Lastname</th>
-              <th scope="col">ISBN</th>
-              <th scope="col">Title</th>
-              <th scope="col">Category</th>
-              <th scope="col">Author</th>
-              <th scope="col">Rack</th>
-              <th scope="col">Date</th>
-              <th scope="col">Action</th>
+              <th scope="col"><?= $language['table_firstname'] ?></th>
+              <th scope="col"><?= $language['table_lastname'] ?></th>
+              <th scope="col"><?= $language['table_isbn'] ?></th>
+              <th scope="col"><?= $language['table_title'] ?></th>
+              <th scope="col"><?= $language['table_category'] ?></th>
+              <th scope="col"><?= $language['table_author'] ?></th>
+              <th scope="col"><?= $language['table_rack'] ?></th>
+              <th scope="col"><?= $language['table_date'] ?></th>
+              <th scope="col"><?= $language['table_action'] ?></th>
             </tr>
           </thead>
           <tbody>
@@ -63,7 +63,9 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="confrimModalLabel">Approve the borrowing :</h5>
+                <h5 class="modal-title" id="confrimModalLabel">
+                  <?= $language['reservations_modal_approve_msg'] ?>
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <form method="POST" action="<?= URLROOT ?>/reservations/confirm" class="form-modal">
@@ -71,16 +73,20 @@
                   <div class="mb-3 text-start">
                     <input type="hidden" name="barcode" class="form-control <?php echo (!empty($data['barcode_err'])) ? 'is-invalid' : ''; ?>" value="<?= $data['barcode'] ?? '' ?>">
                     <span class="invalid-feedback"><?php echo $data['barcode_err']; ?></span>
-                    <label class="form-label">Full Name:</label>
+                    <label class="form-label">
+                      <?= $language['full_name'] ?>
+                    </label>
                     <input type="text" name="fullname" class="form-control" value="<?= $data['fullname'] ?? '' ?>" readonly>
-                    <label class="form-label">Book Inventory:</label>
+                    <label class="form-label">
+                      <?= $language['book_inventory'] ?>
+                    </label>
                     <input type="text" name="inv" class="form-control <?php echo (!empty($data['inv_err'])) ? 'is-invalid' : ''; ?>" placeholder="Enter Inventory number" value="<?= $data['inv'] ?? '' ?>">
                     <span class="invalid-feedback"><?php echo $data['inv_err']; ?></span>
                   </div>
                 </div>
                 <div class="modal-footer">
-                  <a href="#" class="btn btn-outline-danger btn-delete-reservation">Delete</a>
-                  <button type="submit" class="btn btn-outline-success">Approve</button>
+                  <a href="#" class="btn btn-outline-danger btn-delete-reservation"><?= $language['btn_delete'] ?></a>
+                  <button type="submit" class="btn btn-outline-success"><?= $language['btn_approve'] ?></button>
 
                 </div>
 
@@ -90,7 +96,7 @@
         </div>
       </div>
     <?php else : ?>
-      <p>No reservations found</p>
+      <p><?= $language['reservations_not_found'] ?></p>
     <?php endif ?>
   </div>
   <script>
@@ -117,5 +123,4 @@
         });
       });
     })();
-
   </script>

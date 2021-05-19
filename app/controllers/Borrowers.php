@@ -75,6 +75,7 @@ class Borrowers extends Controller
 
   public function findBorrowerByBarCode()
   {
+    global $language;
     if (!isAdminLoggedIn()) {
       redirect('');
     }
@@ -106,10 +107,10 @@ class Borrowers extends Controller
                   <div class="card-body">
                     <h5 class="card-title">' . $borrower->Firstname . ' ' . $borrower->Lastname . '</h5>
                     <ul class="card-text list-unstyled fw-normal pb-1">
-                      <li>Barcode : <small class="text-muted">' . $borrower->Barcode . '</small></li>
-                      <li>CIN : <small class="text-muted">' . $borrower->CIN . '</small></li>
-                      <li>Program : <small class="text-muted">' . $borrower->Program . '</small></li>
-                      <li class="alert-' . $alert . '">Sanctions : <small class="text-muted">' . $sanctionsCount . '</small></li>
+                      <li>' . $language['table_barcode'] . '<small class="text-muted"> : ' . $borrower->Barcode . '</small></li>
+                      <li>' . $language['table_cin'] . ' : <small class="text-muted">' . $borrower->CIN . '</small></li>
+                      <li>' . $language['table_program'] . ' : <small class="text-muted">' . $borrower->Program . '</small></li>
+                      <li class="alert-' . $alert . '">' . $language['table_sanctions'] . ' : <small class="text-muted">' . $sanctionsCount . '</small></li>
                     </ul>
                     <p class="card-text"><small class="text-muted">' . $msg . '</small></p>
                   </div>

@@ -1,17 +1,17 @@
 <div class="card text-center card-borrower">
   <div class="card-header">
-    Search for a book :
+    <?= $language['books_header'] ?>
   </div>
   <div class="card-body">
     <form method="POST" class="search-form row g-3 justify-content-center">
       <div class="col-auto">
-        <label>Filter by:</label>
+        <label><?= $language['filter_by'] ?> :</label>
       </div>
       <div class="col-auto">
         <div class="form-check">
           <input class="form-check-input" type="radio" name="filterby" id="allbooks" checked>
           <label class="form-check-label small text-muted" for="allbooks">
-            All books
+          <?= $language['all_books'] ?>
           </label>
         </div>
       </div>
@@ -19,7 +19,7 @@
         <div class="form-check">
           <input class="form-check-input" type="radio" name="filterby" id="outofstock">
           <label class="form-check-label small text-muted" for="outofstock">
-            Out of stock books
+          <?= $language['out_of_stock_books'] ?>
           </label>
         </div>
       </div>
@@ -28,7 +28,7 @@
           <input class="form-check-input" type="radio" name="filterby" id="available">
 
           <label class="form-check-label small text-muted" for="available">
-            Available books
+          <?= $language['available_books'] ?>
           </label>
         </div>
       </div>
@@ -39,7 +39,7 @@
         <div class="form-check">
           <input class="form-check-input" type="radio" name="orderby" id="ISBN" checked>
           <label class="form-check-label small text-muted" for="ISBN">
-            ISBN
+          <?= $language['table_isbn'] ?>
           </label>
         </div>
       </div>
@@ -48,13 +48,13 @@
           <input class="form-check-input" type="radio" name="orderby" id="Title">
 
           <label class="form-check-label small text-muted" for="Title">
-            Title
+          <?= $language['table_title'] ?>
           </label>
         </div>
       </div>
       <hr>
       <div class="col-auto">
-        <input type="text" name="query" class="form-control" placeholder="Type here to search...">
+        <input type="text" name="query" class="form-control" placeholder="<?= $language['search_placeholder'] ?>">
       </div>
       <!-- <div class="col-auto">
         <button type="submit" class="btn btn-outline-primary btn-search mb-3">Search now</button>
@@ -67,15 +67,15 @@
         <?php if (!empty($data['books'])) : ?>
           <thead class="table-light">
             <tr>
-              <th scope="col">ISBN</th>
-              <th scope="col">Title</th>
-              <th scope="col">Type</th>
-              <th scope="col">Category</th>
-              <th scope="col">Edition</th>
-              <th scope="col">Rack</th>
-              <th scope="col">Author</th>
-              <th scope="col">Status</th>
-              <th scope="col">Action</th>
+              <th scope="col"><?= $language['table_isbn'] ?></th>
+              <th scope="col"><?= $language['table_title'] ?></th>
+              <th scope="col"><?= $language['table_type'] ?></th>
+              <th scope="col"><?= $language['table_category'] ?></th>
+              <th scope="col"><?= $language['table_edition'] ?></th>
+              <th scope="col"><?= $language['table_rack'] ?></th>
+              <th scope="col"><?= $language['table_author'] ?></th>
+              <th scope="col"><?= $language['table_status'] ?></th>
+              <th scope="col"><?= $language['table_action'] ?></th>
             </tr>
           </thead>
           <tbody>
@@ -104,7 +104,7 @@
         <?php else : ?>
       </table>
       <tr>
-        <td><?= 'There is no result that match your search' ?> </td>
+        <td><?= $language['search_no_result'] ?></td>
       </tr>
     </div>
   <?php endif ?>
@@ -117,22 +117,22 @@
   const queryBox = document.querySelector('.search-form input[name="query"]');
   const orderbyInputs = document.querySelectorAll('input[name="orderby"]');
   const filterbyInputs = document.querySelectorAll('input[name="filterby"]');
-    let url = "<?= URLROOT ?>" + '/books';
-    queryBox.addEventListener('keyup', function(event) {
+  let url = "<?= URLROOT ?>" + '/books';
+  queryBox.addEventListener('keyup', function(event) {
+    makeRequest(url, ...getCurrentValues());
+  });
+  filterbyInputs.forEach(input => {
+    input.addEventListener('change', function(event) {
       makeRequest(url, ...getCurrentValues());
     });
-    filterbyInputs.forEach(input => {
-      input.addEventListener('change', function(event) {
-        makeRequest(url, ...getCurrentValues());
-      });
-    })
-    orderbyInputs.forEach(input => {
-      input.addEventListener('change', function(event) {
-        console.log(getCurrentValues())
-        makeRequest(url, ...getCurrentValues());
-      });
-    })
-  
+  })
+  orderbyInputs.forEach(input => {
+    input.addEventListener('change', function(event) {
+      console.log(getCurrentValues())
+      makeRequest(url, ...getCurrentValues());
+    });
+  })
+
   function getCurrentValues() {
     const orderby = document.querySelector('input[name="orderby"]:checked');
     const filterby = document.querySelector('input[name="filterby"]:checked');

@@ -3,6 +3,9 @@ nav a {
   padding-left: 0;
   margin-right: 30px;
 }
+nav .nav-pills .nav-link {
+  color: #948e95;
+}
 .nav-pills .nav-link:hover {
   color: #48474b;
   transition: 600ms;

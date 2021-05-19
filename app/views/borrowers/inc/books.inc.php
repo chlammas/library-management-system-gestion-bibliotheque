@@ -1,30 +1,28 @@
 <div class="card text-center card-borrower">
   <div class="card-header">
-    Search for a book :
+    <?= $language['books_header'] ?>
   </div>
   <div class="card-body">
     <form method="POST" class="search-form row g-3 justify-content-center">
       <div class="col-auto">
       </div>
       <div class="col-auto">
-        <input type="text" name="query" class="form-control" placeholder="Type here to search...">
+        <input type="text" name="query" class="form-control" placeholder="<?= $language['search_placeholder'] ?>">
       </div>
-      <div class="col-auto">
-        <button type="submit" class="btn btn-outline-primary btn-search mb-3">Search now</button>
-      </div>
+
     </form>
     <div class="books-list table-responsive">
       <table class="table table-books">
         <?php if (!empty($data['books'])) : ?>
           <thead class="table-light">
             <tr>
-              <th scope="col">ISBN</th>
-              <th scope="col">Title</th>
-              <th scope="col">Type</th>
-              <th scope="col">Category</th>
-              <th scope="col">Edition</th>
-              <th scope="col">Author</th>
-              <th scope="col">Action</th>
+              <th scope="col"><?= $language['table_isbn'] ?></th>
+              <th scope="col"><?= $language['table_title'] ?></th>
+              <th scope="col"><?= $language['table_type'] ?></th>
+              <th scope="col"><?= $language['table_category'] ?></th>
+              <th scope="col"><?= $language['table_edition'] ?></th>
+              <th scope="col"><?= $language['table_author'] ?></th>
+              <th scope="col"><?= $language['table_action'] ?></th>
             </tr>
           </thead>
           <tbody>
@@ -37,13 +35,13 @@
                 <td><?= $book->Edition ?></td>
                 <td><?= $book->Author ?></td>
                 <?php if (!empty($data['borrowing'])) : ?>
-                  <td title="Please return the borrowed book before reserving new one !"><a href="<?= URLROOT ?>/reservations/add/<?= $book->ISBN ?>" class="btn btn-outline-primary btn-search disabled">Reserve now</a></td>
+                  <td title="Please return the borrowed book before reserving new one !"><a href="<?= URLROOT ?>/reservations/add/<?= $book->ISBN ?>" class="btn btn-outline-primary btn-search disabled"><?= $language['btn_reserve'] ?></a></td>
 
                 <?php elseif (!empty($data['reservation'])) : ?>
 
-                  <td title="You can't make more than one resrvation at the same time!"><a href="<?= URLROOT ?>/reservations/add/<?= $book->ISBN ?>" class="btn btn-outline-primary btn-search disabled">Reserve now</a></td>
+                  <td title="You can't make more than one resrvation at the same time!"><a href="<?= URLROOT ?>/reservations/add/<?= $book->ISBN ?>" class="btn btn-outline-primary btn-search disabled"><?= $language['btn_reserve'] ?></a></td>
                 <?php else : ?>
-                  <td><a href="<?= URLROOT ?>/reservations/add/<?= $book->ISBN ?>" class="btn btn-outline-primary btn-search ">Reserve now</a></td>
+                  <td><a href="<?= URLROOT ?>/reservations/add/<?= $book->ISBN ?>" class="btn btn-outline-primary btn-search "><?= $language['btn_reserve'] ?></a></td>
                 <?php endif ?>
               </tr>
             <?php endforeach ?>
@@ -52,7 +50,7 @@
         <?php else : ?>
       </table>
       <tr>
-        <td><?php echo $_SERVER['REQUEST_METHOD'] == 'POST' ? 'There are no results that match your search' : '' ?> </td>
+        <td><?php echo $_SERVER['REQUEST_METHOD'] == 'POST' ? $language['search_no_result'] : '' ?> </td>
       </tr>
     </div>
   <?php endif ?>
@@ -64,12 +62,7 @@
   // AJAX To Search For a Book
   const searchForm = document.querySelector('.search-form');
   const queryBox = document.querySelector('.search-form input[name="query"]');
-  if (searchForm) {
-    searchForm.addEventListener('submit', function(event) {
-      event.preventDefault();
-      makeRequest('borrowers', this.query.value);
-    });
-
+  if (queryBox) {
     queryBox.addEventListener('keyup', function(event) {
       makeRequest('borrowers', queryBox.value);
     });

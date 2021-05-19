@@ -30,6 +30,7 @@ class Books extends Controller
 
   public function findBookByInv()
   {
+    global $language;
     if (!isAdminLoggedIn()) {
       redirect('');
     }
@@ -46,9 +47,9 @@ class Books extends Controller
                   <div class="card-body">
                     <h5 class="card-title">' . $book->Title . '</h5>
                     <ul class="card-text list-unstyled fw-normal pb-1">
-                      <li>Inv : <small class="text-muted">' . $book->Inv . '</small></li>
-                      <li>Author : <small class="text-muted">' . $book->Author . '</small></li>
-                      <li>Rack : <small class="text-muted">' . $book->Rack . '</small></li>
+                      <li>' . $language['table_inv'] . ' : <small class="text-muted">' . $book->Inv . '</small></li>
+                      <li>' . $language['table_author'] . ' : <small class="text-muted">' . $book->Author . '</small></li>
+                      <li>' . $language['table_rack'] . ' : <small class="text-muted">' . $book->Rack . '</small></li>
                     </ul>
                   </div>
                 </div>
