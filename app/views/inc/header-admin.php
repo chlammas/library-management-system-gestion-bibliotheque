@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="<?= URLROOT ?>/fontawesome/css/all.css">
   <script src="<?= URLROOT ?>/js/chart.min.js"></script>
   <link rel="stylesheet" href="<?= URLROOT ?>/css/style.css">
-  <title><?= SITENAME ?></title>
+  <title><?= $_SESSION['lang'] === 'fr' ? SITENAME_FR : SITENAME ?></title>
 </head>
 
 <body>

@@ -8,7 +8,7 @@
   <link href="<?= URLROOT ?>/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="<?= URLROOT ?>/fontawesome/css/all.css">
   <link rel="stylesheet" href="<?= URLROOT ?>/css/style.css">
-  <title><?= SITENAME ?></title>
+  <title><?= $_SESSION['lang'] === 'fr' ? SITENAME_FR : SITENAME ?></title>
 </head>
 
 <body>
