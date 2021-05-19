@@ -55,8 +55,8 @@ CREATE TABLE `borrowing` (
 );
 
 CREATE TABLE `reservation` (
-  `BorrowerBarcode` varchar(256) NOT NULL,
-  `ISBN` varchar(256) NOT NULL,
+  `BorrowerBarcode` varchar(156) NOT NULL,
+  `ISBN` varchar(156) NOT NULL,
   `Date` date DEFAULT CURRENT_DATE,
   FOREIGN KEY (`ISBN`) REFERENCES `book` (`ISBN`),
   FOREIGN KEY (`BorrowerBarcode`) REFERENCES `borrower` (`Barcode`),
@@ -120,13 +120,13 @@ SELECT * FROM availablebooks;
 CREATE VIEW blockedborrowers as 
 SELECT Barcode, CIN, Firstname, Lastname, Program, 'Blocked' as 'Status', COUNT(bg.BorrowerBarcode) AS 'Borrowings',  COUNT(s.BorrowerBarcode) AS 'Sanctions'  FROM borrowing bg RIGHT JOIN borrower b ON bg.BorrowerBarcode = b.Barcode  LEFT JOIN sanction s on s.BorrowerBarcode = b.Barcode WHERE Barcode IN (SELECT BorrowerBarcode FROM `sanction` WHERE EndDate > CURRENT_DATE)  GROUP BY (Barcode);
 
-CREATE VIEW Activeborrowers AS
+CREATE VIEW activeborrowers AS
 SELECT Barcode, CIN, Firstname, Lastname, Program, 'Active' as 'Status', COUNT(bg.BorrowerBarcode) AS 'Borrowings',  COUNT(s.BorrowerBarcode) AS 'Sanctions'  FROM borrowing bg RIGHT JOIN borrower b ON bg.BorrowerBarcode = b.Barcode  LEFT JOIN sanction s on s.BorrowerBarcode = b.Barcode WHERE Barcode NOT IN (SELECT Barcode FROM  blockedborrowers)  GROUP BY (Barcode);
 
 CREATE VIEW allborrowers as
 SELECT * FROM blockedborrowers
 UNION
-SELECT * FROM Activeborrowers ;
+SELECT * FROM activeborrowers ;
 
 -- -- statistics
 CREATE VIEW mostborrowedbooks AS SELECT ab.ISBN, Title, Type, Category, Edition, Rack, Author, Status, COUNT(b.Id) as 'Borrowings' FROM allbooks ab JOIN bookcopy bc ON ab.ISBN = bc.ISBN LEFT JOIN borrowing b ON bc.Inv = b.Inv GROUP BY (ab.ISBN) ORDER BY Borrowings DESC;
