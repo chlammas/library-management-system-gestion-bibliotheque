@@ -46,7 +46,7 @@ class Statistics extends Controller
   {
     require_once '../app/models/Book.php';
     self::$bookModel = new Book;
-    return count(self::$bookModel->findBooks(false));
+    return count(self::$bookModel->findBooks('', 'outofstock'));
   }
   static function BorrowedBooks($limit = 10, $order='desc')
   {
