@@ -34,6 +34,27 @@ class Book
 
     return $this->db->resultSet();
   }
+  public function findCopies($inv=null, $isbn=null, $Available=null)
+  {
+      $sql = "SELECT *
+          FROM bookcopy";
+
+    if (!is_null($inv)) {
+      $sql .= " WHERE Inv = :inv";
+    } elseif (!is_null($isbn)) {
+      $sql .= " WHERE ISBN = :ISBN";
+    }
+    
+    if ($Available === true) {
+      $sql .= " WHERE Inv NOT IN (SELECT Inv FROM borrowing where IsReturned=false)";
+    }
+
+    $this->db->query($sql);
+    $this->db->bind(':inv', $inv);
+    $this->db->bind(':ISBN', $isbn);
+
+    return $this->db->resultSet();
+  }
   public function findAvailableBooks($query, $all = true)
   {
     // Get All books

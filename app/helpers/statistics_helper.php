@@ -5,7 +5,25 @@ class Statistics extends Controller
   static Reservation $reservationModel;
   static Book $bookModel;
 
-  static function reservationsCount()
+  static function booksCount()
+  {
+    require_once '../app/models/Book.php';
+    self::$bookModel = new Book;
+    return count(self::$bookModel->findBooks());
+  }
+  static function CopiesCount()
+  {
+    require_once '../app/models/Book.php';
+    self::$bookModel = new Book;
+    return count(self::$bookModel->findCopies());
+  }
+  static function BorrowedCopiesCount()
+  {
+    require_once '../app/models/Borrowing.php';
+    self::$borrowingModel = new Borrowing;
+    return count(self::$borrowingModel->getBorrowings(false));
+  }
+  static function ReservationsCount()
   {
     require_once '../app/models/Reservation.php';
     
@@ -17,6 +35,12 @@ class Statistics extends Controller
     require_once '../app/models/Borrowing.php';
     self::$borrowingModel = new Borrowing;
     return count(self::$borrowingModel->getBorrowings(false));
+  }
+  static function AvailableCopiesCount()
+  {
+    require_once '../app/models/Book.php';
+    self::$bookModel = new Book;
+    return count(self::$bookModel->findCopies(null, null, true));
   }
   static function OutOfStockBooksCount()
   {

@@ -31,7 +31,7 @@ class Admins extends Controller
         // Create session
         createUserSession($loggedInUser, 'admin');
 
-        redirect('admins');
+        redirect('admins/dashboard');
       } else {
         $data['barcode_err'] = 'Account not found!';
         $this->view('pages/index', $data);

@@ -86,6 +86,7 @@ class Borrowing
   public function borrowingsNumber()
   {
     $sql = "SELECT * FROM borrowingsnumber";
+ 
     $this->db->query($sql);
     return $this->db->resultSet();
   }
