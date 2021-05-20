@@ -1,4 +1,4 @@
-<?php require_once APPROOT . '/views/inc/header-admin.php'; ?>
+<?php require_once APPROOT . '/views/inc/header.php'; ?>
 
 <style type="text/css">
   li .submenu {
@@ -124,7 +124,7 @@
 
           <li class="nav-item">
             <a href="<?= URLROOT ?>/reservations" class="nav-link nav-link-custom link-dark <?= isset($data['reservations']) ? 'active' : '' ?>">
-              <?= $language['nav_reservations'] ?> <span class="badge bg-secondary rounded-pill"><?= Statistics::reservationsCount() ?></span>
+              <?= $language['nav_reservations'] ?> <span class="badge bg-secondary rounded-pill"><?= Statistics::ReservationsCount() ?></span>
             </a>
           </li>
           <hr>
