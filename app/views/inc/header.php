@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?= $_SESSION['lang'] ?>">
 
 <head>
   <meta charset="UTF-8">
@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="<?= URLROOT ?>/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="<?= URLROOT ?>/fontawesome/css/all.css">
+  <script src="<?= URLROOT ?>/js/chart.min.js"></script>
   <link rel="stylesheet" href="<?= URLROOT ?>/css/style.css">
   <title><?= $_SESSION['lang'] === 'fr' ? SITENAME_FR : SITENAME ?></title>
 </head>
@@ -18,8 +19,10 @@
       <svg class="bi me-2" width="40" height="32">
         <use xlink:href="#bootstrap"></use>
       </svg>
-      <span class="fs-4">Université Chouaib Doukkali</span>
+      <span class="fs-s4"><img src="<?= URLROOT ?>/img/logo.png" alt="Université Chouaib Doukkali" width="350px"></span>
     </a>
     <?php require_once APPROOT . '/views/inc/navbar.php'; ?>
   </header>
+  <?php if(!isAdminLoggedIn()) :?>
   <div class="container">
+  <?php endif ?>
