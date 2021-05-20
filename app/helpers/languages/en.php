@@ -111,7 +111,8 @@ $language = [
   'french' => 'French',
   'change_lang_msg' => 'Change the language',
   'day' => 'day',
-  'ended' => 'Ended'
+  'ended' => 'Ended',
+  'choose_lang' => 'Choose language'
   
 ];
 
