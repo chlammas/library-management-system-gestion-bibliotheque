@@ -2,7 +2,7 @@
   <ul class="nav nav-pills">
     <div title="<?= $language['change_lang_msg'] ?>" class="btn-group mx-2">
       <button style="border:none;" type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="fas fa-globe"></i>
+      <?= $language['choose_lang'] ?> <i class="fas fa-globe"></i>
       </button>
       <ul class="dropdown-menu">
         <li><a class="dropdown-item" href="?lang=en"><?= $language['english'] ?></a></li>
@@ -47,9 +47,9 @@
       </div>
 
     <?php else : ?>
-      <li class="nav-item"><a href="<?php echo URLROOT ?>" class="nav-link nav-link-custom active"><?= $language['nav_home'] ?></a></li>
+      <!-- <li class="nav-item"><a href="<?php echo URLROOT ?>" class="nav-link nav-link-custom active"><?= $language['nav_home'] ?></a></li>
       <li class="nav-item"><a href="<?php echo URLROOT ?>/pages/about" class="nav-link nav-link-custom"><?= $language['nav_about'] ?></a></li>
-      <li class="nav-item"><a href="<?php echo URLROOT ?>/pages/about" class="nav-link nav-link-custom"><?= $language['nav_contactus'] ?></a></li>
+      <li class="nav-item"><a href="<?php echo URLROOT ?>/pages/about" class="nav-link nav-link-custom"><?= $language['nav_contactus'] ?></a></li> -->
     <?php endif ?>
 
   </ul>
