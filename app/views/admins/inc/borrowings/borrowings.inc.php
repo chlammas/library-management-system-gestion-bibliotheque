@@ -200,7 +200,11 @@
           const tds_and_ths = btn.parentElement.parentElement.children;
           formModal.barcode.value = barcode;
           formModal.idborrowing.value = idBorrowing;
-          modalTitle.textContent = `The "${tds_and_ths[3].textContent} ${tds_and_ths[4].textContent}" borrowing : `;
+          <?php if ($_SESSION['lang'] === 'fr') : ?>
+            modalTitle.textContent = `L'emprunt de "${tds_and_ths[3].textContent} ${tds_and_ths[4].textContent}": `;
+          <? else : ?>
+            modalTitle.textContent = `The "${tds_and_ths[3].textContent} ${tds_and_ths[4].textContent}" borrowing : `;
+          <? endif ?>
 
         });
       });

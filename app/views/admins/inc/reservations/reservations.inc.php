@@ -80,7 +80,7 @@
                     <label class="form-label">
                       <?= $language['book_inventory'] ?>
                     </label>
-                    <input type="text" name="inv" class="form-control <?php echo (!empty($data['inv_err'])) ? 'is-invalid' : ''; ?>" placeholder="Enter Inventory number" value="<?= $data['inv'] ?? '' ?>">
+                    <input type="text" name="inv" class="form-control <?php echo (!empty($data['inv_err'])) ? 'is-invalid' : ''; ?>" placeholder="<?= $language['book_inventory_placeholder'] ?>" value="<?= $data['inv'] ?? '' ?>">
                     <span class="invalid-feedback"><?php echo $data['inv_err']; ?></span>
                   </div>
                 </div>

@@ -7,7 +7,7 @@ class borrowings extends Controller
   private Reservation $reservationModel;
   private Sanction $sanctionModel;
   private Book $bookModel;
-
+  private $lang;
   public function __construct()
   {
     if (!isAdminLoggedIn()) {
@@ -18,6 +18,9 @@ class borrowings extends Controller
     $this->reservationModel = $this->model('Reservation');
     $this->sanctionModel = $this->model('Sanction');
     $this->bookModel = $this->model('Book');
+
+    global $language;
+    $this->lang = $language;
   }
 
   public function index()
@@ -26,7 +29,7 @@ class borrowings extends Controller
     $borrowings = $this->getBorrowings($_GET, false);
 
     $data = [
-      'card-header' => 'Not returned borrowings :',
+      'card-header' => $this->lang['not_returned_bgs'],
       'borrowings' => $borrowings,
       'status' => 'not returned',
     ];
@@ -38,7 +41,7 @@ class borrowings extends Controller
     $borrowings = $this->getBorrowings($_GET, true);
 
     $data = [
-      'card-header' => 'Returned borrowings :',
+      'card-header' => $this->lang['returned_bgs'],
       'borrowings' => $borrowings,
       'status' => 'returned'
     ];
@@ -77,7 +80,7 @@ class borrowings extends Controller
         'inv' => isset($_POST['inv']) ? trim($_POST['inv']) : '',
         'inv_err' => '',
         'fullname' => isset($_POST['fullname']) ? trim($_POST['fullname']) : '',
-        'card-header' => 'Not returned borrowings :',
+        'card-header' => $this->lang['not_returned_bgs'],
         'status' => 'not returned',
         'referer' => 'borrowings/add'
       ];
@@ -87,25 +90,25 @@ class borrowings extends Controller
       }
 
       if (empty($data['barcode'])) {
-        $data['barcode_err'] = 'Invalid borrower barcode';
+        $data['barcode_err'] = $this->lang['invalid_br_bcode'];
       }
       if (empty($data['inv'])) {
-        $data['inv_err'] = 'Please scan book inventory number';
+        $data['inv_err'] = $this->lang['please_inv'];
       }
 
       // Make sure there is no error
       if (empty($data['barcode_err']) && empty($data['inv_err'])) {
         try {
           $this->borrowingModel->add($data['barcode'], $data['inv']);
-          flash('borrowing', 'Book borrowed successfully!');
+          flash('borrowing', $this->lang['book_borrowed']);
           redirect('borrowings');
         } catch (PDOException $e) {
-          $expectedError = 'This book copy is already borrowed !';
+          $expectedError = $this->lang['book_already_borrowed'];
           if (strpos($e->getMessage(), $expectedError) !== false) {
             flash('reservation', $expectedError, 'alert alert-danger');
             $data['inv_err'] = $expectedError;
           } else {
-            $expectedError = strpos($e->getMessage(), 'Inv') !== false ? 'Book Inventory is invalid!' : 'Something wrong!';
+            $expectedError = strpos($e->getMessage(), 'Inv') !== false ? $this->lang['inventory_invalid'] : $this->lang['something_wrong'];
 
             flash('reservation', $expectedError, 'alert alert-danger');
           }
@@ -147,31 +150,31 @@ class borrowings extends Controller
 
       if ($data['sanction']) {
         if (empty($data['enddate'])) {
-          flash('borrowing', 'End date is required!', 'alert alert-danger');
-          $data['enddate_err'] = 'Invalid end date!';
+          flash('borrowing', $this->lang['end_date_required'], 'alert alert-danger');
+          $data['enddate_err'] = $this->lang['invalid_end_date'];
         } elseif (strtotime($data['enddate']) <= strtotime(date("Y/m/d"))) {
-          flash('borrowing', 'End date must be greather than current date', 'alert alert-danger');
-          $data['enddate_err'] = 'End date must be greather than current date!';
+          flash('borrowing', $this->lang['end_date_greather_curr_date'], 'alert alert-danger');
+          $data['enddate_err'] = $this->lang['end_date_greather_curr_date'];
         } elseif (empty($data['barcode'])) {
-          flash('borrowing', 'Something wrong!', 'alert alert-danger');
+          flash('borrowing', $this->lang['something_wrong'], 'alert alert-danger');
         } else {
           try {
             $this->sanctionModel->add($data['barcode'], $data['enddate'], $data['note']);
           } catch (PDOException $e) {
-            flash('borrowing', 'Something wrong!', 'alert alert-danger');
+            flash('borrowing', $this->lang['something_wrong'], 'alert alert-danger');
           }
         }
       }
 
       if (empty($data['idborrowing'])) {
 
-        flash('borrowing', 'Something wrong!', 'alert alert-danger');
+        flash('borrowing', $this->lang['something_wrong'], 'alert alert-danger');
       } else {
         try {
           $this->borrowingModel->confirm($data['idborrowing']);
-          flash('borrowing', 'Book returned successfully!');
+          flash('borrowing', $this->lang['book_returned']);
         } catch (PDOException $e) {
-          flash('reservation', 'Something wrong!', 'alert alert-danger');
+          flash('reservation', $this->lang['something_wrong'], 'alert alert-danger');
         }
         redirect('borrowings');
       }
