@@ -27,7 +27,7 @@
           <li>
             <hr class="dropdown-divider">
           </li>-->
-          <li><a class="dropdown-item" href="<?php echo URLROOT ?>/borrowers/logout">Logout</a></li>
+          <li><a class="dropdown-item" href="<?php echo URLROOT ?>/borrowers/logout"><?= $language['btn_logout'] ?></a></li>
         </ul>
       </div>
     <?php elseif (isAdminLoggedIn()) : ?>
