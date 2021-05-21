@@ -13,6 +13,9 @@ class Reservations extends Controller
 
     $this->reservationModel = $this->model('Reservation');
     $this->borrowingModel = $this->model('Borrowing');
+
+    global $language;
+    $this->lang = $language;
   }
 
   public function index()
@@ -30,18 +33,18 @@ class Reservations extends Controller
     $reservation = $this->reservationModel->findReservationByUserCode($barcode);
     try {
       if ($reservation) {
-        flash('reservation', 'You can\'t make more than one resrvation at the same time!', 'alert alert-danger');
+        flash('reservation', $this->lang['reservation_max'], 'alert alert-danger');
       } elseif ($this->reservationModel->add($barcode, trim($ISBN))) {
-        flash('reservation', 'Book reserved successfully!');
+        flash('reservation', $this->lang['book_reserved']);
       } else {
-        flash('reservation', 'Something wrong!', 'alert alert-danger');
+        flash('reservation', $this->lang['something_wrong'], 'alert alert-danger');
       }
     } catch (PDOException $e) {
-      $expectedError = 'You are blocked ! Please contact the administrator!';
+      $expectedError = $this->lang['you_are_blocked'];
       if (strpos($e->getMessage(), $expectedError) !== false) {
         flash('reservation', $expectedError, 'alert alert-danger');
       } else {
-        flash('reservation', 'Something wrong!', 'alert alert-danger');
+        flash('reservation', $this->lang['something_wrong'], 'alert alert-danger');
       }
     }
     redirect('borrwings');
@@ -58,30 +61,30 @@ class Reservations extends Controller
         'inv' => isset($_POST['inv']) ? trim($_POST['inv']) : '',
         'inv_err' => '',
         'fullname' => isset($_POST['fullname']) ? trim($_POST['fullname']) : '',
-        'card-header' => 'Not returned borrowings :',
+        'card-header' => $this->lang['not_returned_bgs'],
         'status' => 'not returned'
       ];
 
       if (empty($data['barcode'])) {
-        $data['barcode_err'] = 'Invalid borrower barcode';
+        $data['barcode_err'] = $this->lang['invalid_br_bcode'];
       }
       if (empty($data['inv'])) {
-        $data['inv_err'] = 'Please scan book inventory number';
+        $data['inv_err'] = $this->lang['please_inv'];
       }
 
       // Make sure there is no error
       if (empty($data['barcode_err']) && empty($data['inv_err'])) {
         try {
           $this->borrowingModel->add($data['barcode'], $data['inv']);
-          flash('borrowing', 'Book borrowed successfully!');
+          flash('borrowing', $this->lang['book_borrowed']);
           redirect('borrowings');
         } catch (PDOException $e) {
-          $expectedError = 'This book copy is already borrowed !';
+          $expectedError = $this->lang['book_already_borrowed'];
           if (strpos($e->getMessage(), $expectedError) !== false) {
             flash('reservation', $expectedError, 'alert alert-danger');
             $data['inv_err'] = $expectedError;
           } else {
-            $expectedError = strpos($e->getMessage(), 'Inv') !== false ? 'Book Inventory is invalid!' : 'Something wrong!';
+            $expectedError = strpos($e->getMessage(), 'Inv') !== false ? $this->lang['inventory_invalid'] : $this->lang['something_wrong'];
 
             flash('reservation', $expectedError, 'alert alert-danger');
           }
@@ -104,9 +107,9 @@ class Reservations extends Controller
   public function cancel($barcode)
   {
     if ($this->reservationModel->delete($barcode)) {
-      flash('reservation', 'Reservation canceled!', 'alert alert-info');
+      flash('reservation', $this->lang['reservation_canceled'], 'alert alert-info');
     } else {
-      flash('reservation', 'Something wrong!', 'alert alert-danger');
+      flash('reservation', $this->lang['something_wrong'], 'alert alert-danger');
     }
     redirect('reservations');
   }

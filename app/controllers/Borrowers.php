@@ -88,7 +88,7 @@ class Borrowers extends Controller
         $sanctions = $this->sanctionModel->findSanctionsByUserCode($borrower->Barcode); // Check for applied sactions
         if ($sanctions) {
           $alert = 'danger';
-          $msg = 'This borrower is blocked, please unblock them before completing the proccess!';
+          $msg = $language['borrower_is_blocked'];
           $sanctionsCount = count($this->sanctionModel->findSanctionsByUserCode($borrower->Barcode, false));
         } else {
           $sanctions = $this->sanctionModel->findSanctionsByUserCode($borrower->Barcode, false); // Check for sanctions in history
