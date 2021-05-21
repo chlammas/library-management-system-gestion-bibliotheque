@@ -2,11 +2,11 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/najaedco/lammas.dev/projects/library/
-    - /bin/cp -R app/base $DEPLOYPATH/app/base
-    - /bin/cp -R app/controllers $DEPLOYPATH/app/controllers
-    - /bin/cp -R app/helpers $DEPLOYPATH/app/helpers
-    - /bin/cp -R app/models $DEPLOYPATH/app/models
-    - /bin/cp -R app/views $DEPLOYPATH/app/views
+    - /bin/cp -R app/base $DEPLOYPATH/app/
+    - /bin/cp -R app/controllers $DEPLOYPATH/app/
+    - /bin/cp -R app/helpers $DEPLOYPATH/app/
+    - /bin/cp -R app/models $DEPLOYPATH/app/
+    - /bin/cp -R app/views $DEPLOYPATH/app/
     - /bin/cp app/.htaccess $DEPLOYPATH/app/.htaccess
     - /bin/cp app/main.php $DEPLOYPATH/app/main.php
     - /bin/cp -R public $DEPLOYPATH
