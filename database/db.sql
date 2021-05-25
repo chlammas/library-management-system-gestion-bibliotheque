@@ -26,7 +26,7 @@ CREATE TABLE `book` (
 
 
 CREATE TABLE `bookcopy` (
-  `Inv` int NOT NULL,
+  `Inv` varchar(256) NOT NULL,
   `ISBN` varchar(256) NOT NULL,
   FOREIGN KEY (`ISBN`) REFERENCES `book` (`ISBN`),
   PRIMARY KEY (`Inv`)
@@ -47,7 +47,7 @@ CREATE TABLE `borrowing` (
   `DueDate` date DEFAULT (CURRENT_DATE + interval 2 day),
   `ReturnedDate` date DEFAULT NULL,
   `IsReturned` boolean DEFAULT false,
-  `Inv` int NOT NULL,
+  `Inv` varchar(256) NOT NULL,
   `BorrowerBarcode` varchar(256) NOT NULL,
   FOREIGN KEY (`BorrowerBarcode`) REFERENCES `borrower` (`Barcode`),
   FOREIGN KEY (`Inv`) REFERENCES `bookcopy` (`Inv`),
@@ -146,20 +146,20 @@ INSERT INTO `book` (`ISBN`, `Title`, `Type`, `Category`, `Edition`, `Rack`, `Aut
 ('9783161484100', "The Ultimate Hitchhiker's Guide", 'Self-Help', 'science', 'fourth', 'SMD', 'Douglas Adams');
 
 INSERT INTO `bookcopy` (`Inv`, `ISBN`) VALUES
-(542321, '3454313235412'),
-(45511, '5745455466210'),
-(45512, '5745455466210'),
-(45513, '5745455466210'),
-(45514, '5745455466210'),
-(24517, '6475121554783'),
-(94751, '7341796452811'),
-(94752, '7341796452811'),
-(94753, '7341796452811'),
-(51420, '9783161484100'),
-(51421, '9783161484100'),
-(51422, '9783161484100'),
-(51423, '9783161484100'),
-(51424, '9783161484100');
+('542321', '3454313235412'),
+('45511', '5745455466210'),
+('45512', '5745455466210'),
+('45513', '5745455466210'),
+('45514', '5745455466210'),
+('24517', '6475121554783'),
+('94751', '7341796452811'),
+('94752', '7341796452811'),
+('94753', '7341796452811'),
+('51420', '9783161484100'),
+('51421', '9783161484100'),
+('51422', '9783161484100'),
+('51423', '9783161484100'),
+('51424', '9783161484100');
 
 INSERT INTO `borrower` (`Barcode`, `CIN`, `Firstname`, `Lastname`, `Program`) VALUES
 ('k14454147', 'M245182', 'salah', 'amjad', 'SVT'),
@@ -177,9 +177,9 @@ INSERT INTO `reservation` (`BorrowerBarcode`, `ISBN`, `Date`) VALUES
 ('k24454928', '7341796452811', '2021-05-05');
 
 INSERT INTO `borrowing` (`Id`, `BorrowingDate`, `DueDate`, `ReturnedDate`, `IsReturned`, `Inv`, `BorrowerBarcode`) VALUES
-(1, '2021-04-22', '2021-04-24', NULL, false, 51424, 'k34459198'),
-(2, '2021-04-30', '2021-05-02', NULL, false, 45512, 'k24454175'),
-(3, '2021-04-30', '2021-05-02', NULL, false, 24517, 'k98554175');
+(1, '2021-04-22', '2021-04-24', NULL, false, '51424', 'k34459198'),
+(2, '2021-04-30', '2021-05-02', NULL, false, '45512', 'k24454175'),
+(3, '2021-04-30', '2021-05-02', NULL, false, '24517', 'k98554175');
 
 INSERT INTO `sanction` (`Id`, `EndDate`, `Note`, `BorrowerBarcode`) VALUES
 (1, '2021-05-08', NULL, 'k73454121'),
