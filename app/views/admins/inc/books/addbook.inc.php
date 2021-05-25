@@ -1,6 +1,10 @@
 <div class="card text-center card-borrower">
   <div class="card-header">
-  <?=isset($data['edit_book']) ? 'Update the <b>' . $data['title'] . '</b> book' ?? '' : 'Add a new book' ?>
+  <?php if ($_SESSION['lang'] === 'fr') : ?>
+  <?=isset($data['edit_book']) ? 'Mettre à jour le livre <b>' . $data['title'] . '</b>' ?? '' : $language['add_book'] ?>
+  <?php else : ?>
+  <?=isset($data['edit_book']) ? 'Update the <b>' . $data['title'] . '</b> book' ?? '' : $language['add_book'] ?>
+  <?php endif ?>
   </div>
   <div class="card-body">
     <form method="POST">

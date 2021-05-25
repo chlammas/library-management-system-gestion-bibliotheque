@@ -10,6 +10,9 @@ class Books extends Controller
     }
 
     $this->bookModel = $this->model('Book');
+
+    global $language;
+    $this->lang = $language;
   }
 
   public function index()
@@ -21,7 +24,7 @@ class Books extends Controller
       'filterby' => isset($_GET['filterby']) ? trim($_GET['filterby']) : '',
       'orderby' => isset($_GET['orderby']) ? trim($_GET['orderby']) : 'ISBN',
     ];
-    
+
     $books = $this->bookModel->findBooks($data['query'], $data['filterby'], $data['orderby']);
     $data['books'] = $books;
 
@@ -30,7 +33,6 @@ class Books extends Controller
 
   public function findBookByInv()
   {
-    global $language;
     if (!isAdminLoggedIn()) {
       redirect('');
     }
@@ -47,9 +49,9 @@ class Books extends Controller
                   <div class="card-body">
                     <h5 class="card-title">' . $book->Title . '</h5>
                     <ul class="card-text list-unstyled fw-normal pb-1">
-                      <li>' . $language['table_inv'] . ' : <small class="text-muted">' . $book->Inv . '</small></li>
-                      <li>' . $language['table_author'] . ' : <small class="text-muted">' . $book->Author . '</small></li>
-                      <li>' . $language['table_rack'] . ' : <small class="text-muted">' . $book->Rack . '</small></li>
+                      <li>' . $this->lang['table_inv'] . ' : <small class="text-muted">' . $book->Inv . '</small></li>
+                      <li>' . $this->lang['table_author'] . ' : <small class="text-muted">' . $book->Author . '</small></li>
+                      <li>' . $this->lang['table_rack'] . ' : <small class="text-muted">' . $book->Rack . '</small></li>
                     </ul>
                   </div>
                 </div>
@@ -72,15 +74,15 @@ class Books extends Controller
       if ($noError) {
         try {
           $this->bookModel->add($data['isbn'], $data['title'], $data['type'], $data['category'], $data['edition'], $data['rack'], $data['author']);
-          flash('book', 'Book was added successfully!');
+          flash('book', $this->lang['book_added']);
           redirect('books');
         } catch (PDOException $e) {
-          $expectedError = 'This book was already added!';
+          $expectedError = $this->lang['book_already_added'];
           if (strpos($e->getMessage(), $expectedError) !== false) {
             flash('book', $expectedError, 'alert alert-danger');
             $data['isbn_err'] = $expectedError;
           } else {
-            flash('book', 'Something wrong!', 'alert alert-danger');
+            flash('book', $this->lang['something_wrong'], 'alert alert-danger');
           }
           $data['add_book'] = true;
           $this->view('admins/index', $data);
@@ -108,10 +110,10 @@ class Books extends Controller
       if ($noError) {
         try {
           $this->bookModel->edit($isbn, $data['isbn'], $data['title'], $data['type'], $data['category'], $data['edition'], $data['rack'], $data['author']);
-          flash('book', 'Book was updated successfully!');
+          flash('book', $this->lang['book_updated']);
           redirect('books');
         } catch (PDOException $e) {
-          flash('book', 'Something wrong!', 'alert alert-danger');
+          flash('book', $this->lang['something_wrong'], 'alert alert-danger');
           $data['edit_book'] = true;
           $this->view('admins/index', $data);
         }
@@ -144,30 +146,35 @@ class Books extends Controller
   {
     $book = $this->bookModel->findBookByISBN($isbn);
     if (!$book) {
-      redirect('books');
+      return redirect('books');
     }
+    $data = [
+      'add_book_copy' => true,
+      'isbn' => $book->ISBN,
+      'title' => $book->Title,
+
+    ];
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-      $data = [
-        'inv' => isset($_POST['inv']) ? trim($_POST['inv']) : '',
-        'inv_err' => '',
-      ];
+      $data['inv'] = isset($_POST['inv']) ? trim($_POST['inv']) : '';
+      $data['inv_err'] = '';
 
       if (empty($data['inv'])) {
-        $data['inv_err'] = 'Please enter an inventory number!';
+        $data['inv_err'] = $this->lang['please_enter_inv'];
       } elseif ($this->bookModel->findBookByInv($data['inv'])) {
-        $data['inv_err'] = 'This inventory number is taken!';
+        $data['inv_err'] = $this->lang['inv_is_taken'];
       }
       // Make sure there is no error
       if (empty($data['inv_err'])) {
         try {
           $this->bookModel->addcopy($isbn, $data['inv']);
-          flash('book', 'Book copy was added successfully!');
+          flash('book', $this->lang['copy_added']);
           return redirect('books/addcopy/' . $isbn);
         } catch (PDOException $e) {
-          flash('book', 'Something wrong!', 'alert alert-danger');
+          flash('book', $this->lang['something_wrong'], 'alert alert-danger');
+          $this->view('admins/index', $data);
         }
       } else {
         flash('book', $data['inv_err'], 'alert alert-danger');
@@ -177,13 +184,6 @@ class Books extends Controller
         $this->view('admins/index', $data);
       }
     } else {
-      $data = [
-        'add_book_copy' => true,
-        'isbn' => $book->ISBN,
-        'title' => $book->Title,
-
-      ];
-
       $this->view('admins/index', $data);
     }
   }
@@ -211,25 +211,25 @@ class Books extends Controller
       ];
 
       if (empty($data['isbn'])) {
-        $data['isbn_err'] = 'Please enter a valid ISBN';
+        $data['isbn_err'] = $this->lang['please_isbn'];
       }
       if (empty($data['title'])) {
-        $data['title_err'] = 'Please enter a valid title';
+        $data['title_err'] = $this->lang['please_title'];
       }
       if (empty($data['type'])) {
-        $data['type_err'] = 'Please enter a valid type';
+        $data['type_err'] = $this->lang['please_type'];
       }
       if (empty($data['category'])) {
-        $data['category_err'] = 'Please enter a valid category';
+        $data['category_err'] = $this->lang['please_category'];
       }
       if (empty($data['edition'])) {
-        $data['edition_err'] = 'Please enter a valid edition';
+        $data['edition_err'] = $this->lang['please_edition'];
       }
       if (empty($data['rack'])) {
-        $data['rack_err'] = 'Please enter a valid rack';
+        $data['rack_err'] = $this->lang['please_rack'];
       }
       if (empty($data['author'])) {
-        $data['author_err'] = 'Please enter a valid author';
+        $data['author_err'] = $this->lang['please_author'];
       }
 
       // Make sure there is no error
