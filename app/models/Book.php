@@ -34,9 +34,9 @@ class Book
 
     return $this->db->resultSet();
   }
-  public function findCopies($inv=null, $isbn=null, $Available=null)
+  public function findCopies($inv = null, $isbn = null, $Available = null)
   {
-      $sql = "SELECT *
+    $sql = "SELECT *
           FROM bookcopy";
 
     if (!is_null($inv)) {
@@ -44,14 +44,16 @@ class Book
     } elseif (!is_null($isbn)) {
       $sql .= " WHERE ISBN = :ISBN";
     }
-    
+
     if ($Available === true) {
       $sql .= " WHERE Inv NOT IN (SELECT Inv FROM borrowing where IsReturned=false)";
     }
 
     $this->db->query($sql);
-    $this->db->bind(':inv', $inv);
-    $this->db->bind(':ISBN', $isbn);
+    if (!is_null($inv))
+      $this->db->bind(':inv', $inv);
+    if (!is_null($isbn))
+      $this->db->bind(':ISBN', $isbn);
 
     return $this->db->resultSet();
   }
@@ -78,7 +80,7 @@ class Book
   public function findBookByInv($inv)
   {
 
-    $sql = "SELECT Title, Inv, Author, Rack FROM availablebooks a 
+    $sql = "SELECT Title, Inv, Author, Rack FROM allbooks a 
             INNER JOIN bookcopy b ON a.ISBN = b.ISBN 
             WHERE Inv = :Inv";
 
